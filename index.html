@@ -69,57 +69,64 @@
 
 
     <!-- HERO SECTION -->
-    <section id="home" class="hero-section min-h-[85vh] flex items-center px-8 md:px-16 py-20">
+    <section id="home" class="min-h-[85vh] flex items-center px-8 md:px-16 py-20">
 
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-16 w-full">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-16">
 
             <!-- LEFT: INTRODUCTION -->
-            <div class="hero-copy">
+            <div>
 
-                <p class="hero-label uppercase tracking-[0.3em] text-sm font-semibold mb-6">
+                <p class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-6">
                     Computer Science Student
                 </p>
 
-                <h1 class="hero-heading text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
-                    <span class="hero-heading-line"><span class="hero-heading-inner">Exploring <span class="hero-gradient-text">Ideas.</span></span></span>
-                    <span class="hero-heading-line"><span class="hero-heading-inner">Solving Problems.</span></span>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
+                    Exploring
+                    <span class="text-orange-500">Ideas.</span>
+                    Solving Problems.
                 </h1>
 
-                <p class="hero-description text-gray-400 text-lg md:text-xl mt-8 leading-relaxed">
+                <p class="text-gray-400 text-lg md:text-xl mt-8 leading-relaxed">
                     Hello, I'm Elman Touhid, a CS student passionate about
                     programming, technology, and exploring the endless
                     possibilities of computer science.
                 </p>
 
-                <div class="hero-actions flex flex-wrap gap-4 mt-10">
+                <div class="flex flex-wrap gap-4 mt-10">
 
-                    <a href="#projects" class="hero-primary-button px-8 py-4 rounded-full font-semibold">
+                    <a href="#projects"
+                        class="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-full font-semibold transition">
                         View My Work →
                     </a>
 
-                    <a href="#contact" class="hero-secondary-button px-8 py-4 rounded-full font-semibold">
+                    <a href="#contact"
+                        class="border border-white/20 hover:border-orange-500 px-8 py-4 rounded-full font-semibold transition">
                         Contact Me
                     </a>
 
                 </div>
 
-                <div class="hero-tagline mt-12 flex items-center gap-3 text-gray-500 text-sm">
-                    <span class="hero-status-dot w-2 h-2 rounded-full"></span>
+                <div class="mt-12 flex items-center gap-3 text-gray-500 text-sm">
+                    <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
                     Always Learning. Always Exploring.
                 </div>
 
             </div>
 
+
             <!-- RIGHT: PROFILE PHOTO -->
-            <div class="hero-portrait-column flex justify-center md:justify-end">
+            <div class="flex justify-center md:justify-end">
 
-                <div class="hero-portrait-wrap relative w-full max-w-[380px]">
-                    <div class="hero-portrait-glow" aria-hidden="true"></div>
-                    <div class="hero-portrait-frame" aria-hidden="true"></div>
+                <div class="relative w-full max-w-[380px]">
 
+                    <!-- Orange Frame -->
+                    <div class="absolute -inset-2 rounded-3xl border border-orange-500/40"></div>
+
+                    <!-- Profile Image -->
                     <img src="assets/profile.png"
                         alt="Portrait of Elman Touhid"
-                        class="hero-portrait relative w-full h-[480px] md:h-[560px] object-cover object-center rounded-3xl border border-white/10">
+                        class="relative w-full h-[480px] md:h-[560px] object-cover object-center rounded-3xl border border-white/10">
+
                 </div>
 
             </div>
