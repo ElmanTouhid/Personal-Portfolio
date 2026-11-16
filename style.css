@@ -1,3 +1,4 @@
+
 /* GLOBAL SETTINGS */
 * {
     box-sizing: border-box;
@@ -150,9 +151,14 @@ body {
     border-radius: 27px;
     border: 1px solid transparent;
     background: linear-gradient(140deg, rgba(174, 145, 255, 0.78), rgba(93, 174, 255, 0.62), rgba(126, 95, 230, 0.45)) border-box;
+
+    /* Standard mask properties */
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+
+    /* WebKit compatibility */
     -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
-    mask-composite: exclude;
 }
 
 .hero-portrait {
@@ -167,7 +173,7 @@ body {
     box-shadow: 0 28px 75px rgba(56, 102, 220, 0.20);
 }
 
-/* HERO ENTRANCE SEQUENCE: ONLY ENABLED WHEN JAVASCRIPT IS AVAILABLE */
+/* HERO ENTRANCE SEQUENCE */
 html.js-enabled #home .hero-label,
 html.js-enabled #home .hero-heading-inner,
 html.js-enabled #home .hero-description,
@@ -205,11 +211,13 @@ html.js-enabled #home.hero-ready .hero-portrait-wrap {
     animation: heroPortraitReveal 1.15s cubic-bezier(0.2, 0.75, 0.25, 1) 0.48s forwards;
 }
 
+/* ANIMATION KEYFRAMES */
 @keyframes heroFadeUp {
     from {
         opacity: 0;
         transform: translateY(22px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -221,6 +229,7 @@ html.js-enabled #home.hero-ready .hero-portrait-wrap {
         opacity: 0;
         transform: translateY(110%);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -233,6 +242,7 @@ html.js-enabled #home.hero-ready .hero-portrait-wrap {
         clip-path: inset(12% 0 12% 0 round 28px);
         transform: translateY(28px) scale(0.97);
     }
+
     to {
         opacity: 1;
         clip-path: inset(0 0 0 0 round 24px);
@@ -254,6 +264,7 @@ nav {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
