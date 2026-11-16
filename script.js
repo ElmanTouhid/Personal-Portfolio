@@ -1,9 +1,13 @@
+
 console.log("Elman's Portfolio is running!");
 
 // Enable entrance animations only when JavaScript is available.
 document.documentElement.classList.add("js-enabled");
 
+// =========================================
 // HERO ENTRANCE ANIMATION
+// =========================================
+
 const heroSection = document.getElementById("home");
 
 if (heroSection && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -14,13 +18,62 @@ if (heroSection && !window.matchMedia("(prefers-reduced-motion: reduce)").matche
     heroSection.classList.add("hero-ready");
 }
 
+// =========================================
+// ABOUT SECTION SCROLL ANIMATION
+// =========================================
+
+const aboutSection = document.querySelector(".about-section");
+
+const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+).matches;
+
+if (aboutSection) {
+
+    // Show everything immediately if reduced motion is enabled.
+    if (prefersReducedMotion) {
+        aboutSection.classList.add("about-visible");
+    } else {
+
+        const aboutObserver = new IntersectionObserver(
+            function (entries, observer) {
+
+                entries.forEach(function (entry) {
+
+                    if (entry.isIntersecting) {
+
+                        aboutSection.classList.add("about-visible");
+
+                        // Run the animation only once.
+                        observer.unobserve(aboutSection);
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.18
+            }
+        );
+
+        aboutObserver.observe(aboutSection);
+    }
+}
+
+// =========================================
 // MOBILE NAVIGATION
+// =========================================
+
 const menuBtn = document.getElementById("menu-btn");
 const mobileMenu = document.getElementById("mobile-menu");
 
 // TOGGLE MENU
+
 if (menuBtn && mobileMenu) {
+
     menuBtn.addEventListener("click", function () {
+
         const isOpen = mobileMenu.classList.contains("hidden");
 
         if (isOpen) {
@@ -32,20 +85,28 @@ if (menuBtn && mobileMenu) {
         }
 
         const menuIsOpen = !mobileMenu.classList.contains("hidden");
+
         menuBtn.innerHTML = menuIsOpen ? "✕" : "☰";
         menuBtn.setAttribute("aria-expanded", menuIsOpen);
+
     });
 
     // CLOSE MENU AFTER CLICKING A LINK
+
     const mobileLinks = mobileMenu.querySelectorAll("a");
 
     mobileLinks.forEach(function (link) {
+
         link.addEventListener("click", function () {
+
             mobileMenu.classList.add("hidden");
             mobileMenu.classList.remove("flex");
 
             menuBtn.innerHTML = "☰";
             menuBtn.setAttribute("aria-expanded", "false");
+
         });
+
     });
+
 }
