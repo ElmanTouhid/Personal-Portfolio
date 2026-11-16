@@ -21,7 +21,10 @@ body {
     color: #ffffff;
 }
 
-/* HERO: DEEP PURPLE + ELECTRIC BLUE */
+/* =========================================
+   HERO: DEEP PURPLE + ELECTRIC BLUE
+========================================= */
+
 #home.hero-section {
     position: relative;
     isolation: isolate;
@@ -130,6 +133,7 @@ body {
 }
 
 /* PORTRAIT FRAME AND LIGHTING */
+
 .hero-portrait-wrap {
     isolation: isolate;
 }
@@ -152,11 +156,9 @@ body {
     border: 1px solid transparent;
     background: linear-gradient(140deg, rgba(174, 145, 255, 0.78), rgba(93, 174, 255, 0.62), rgba(126, 95, 230, 0.45)) border-box;
 
-    /* Standard mask properties */
     mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
 
-    /* WebKit compatibility */
     -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
 }
@@ -174,6 +176,7 @@ body {
 }
 
 /* HERO ENTRANCE SEQUENCE */
+
 html.js-enabled #home .hero-label,
 html.js-enabled #home .hero-heading-inner,
 html.js-enabled #home .hero-description,
@@ -211,11 +214,152 @@ html.js-enabled #home.hero-ready .hero-portrait-wrap {
     animation: heroPortraitReveal 1.15s cubic-bezier(0.2, 0.75, 0.25, 1) 0.48s forwards;
 }
 
-/* ANIMATION KEYFRAMES */
-@keyframes heroFadeUp {
+/* =========================================
+   ABOUT: PURPLE + BLUE ANIMATION SYSTEM
+========================================= */
+
+.about-section {
+    position: relative;
+    isolation: isolate;
+}
+
+/* ABOUT COLORS */
+
+.about-eyebrow {
+    color: #a99aff;
+    text-shadow: 0 0 20px rgba(139, 116, 255, 0.2);
+}
+
+.about-title {
+    color: #f8f7ff;
+    letter-spacing: -0.045em;
+}
+
+.about-title-gradient {
+    background: linear-gradient(100deg, #b7a7ff 0%, #8d7bff 45%, #65baff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.about-highlight {
+    background: linear-gradient(100deg, #a995ff, #68baff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ABOUT CONTENT INITIAL STATE */
+
+html.js-enabled .about-section .about-eyebrow,
+html.js-enabled .about-section .about-title,
+html.js-enabled .about-section .about-lead,
+html.js-enabled .about-section .about-paragraph,
+html.js-enabled .about-section .about-card {
+    opacity: 0;
+}
+
+/* ABOUT HEADING: BLUR TO FOCUS */
+
+html.js-enabled .about-section.about-visible .about-eyebrow {
+    animation: aboutFadeUp 0.7s ease forwards;
+}
+
+html.js-enabled .about-section.about-visible .about-title {
+    animation: aboutBlurReveal 1s cubic-bezier(0.2, 0.75, 0.25, 1) 0.15s forwards;
+}
+
+/* LEFT CONTENT: SEQUENTIAL REVEAL */
+
+html.js-enabled .about-section.about-visible .about-lead {
+    animation: aboutSlideLeft 0.85s cubic-bezier(0.2, 0.75, 0.25, 1) 0.3s forwards;
+}
+
+html.js-enabled .about-section.about-visible .about-paragraph:nth-of-type(1) {
+    animation: aboutSlideLeft 0.85s ease 0.5s forwards;
+}
+
+html.js-enabled .about-section.about-visible .about-paragraph:nth-of-type(2) {
+    animation: aboutSlideLeft 0.85s ease 0.7s forwards;
+}
+
+/* ABOUT CARDS: STAGGERED REVEAL */
+
+.about-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    transition:
+        transform 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease,
+        background 0.4s ease;
+}
+
+.about-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(135, 86, 255, 0.10),
+        rgba(50, 143, 255, 0.08)
+    );
+    transition: opacity 0.4s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(130, 135, 255, 0.55);
+    box-shadow:
+        0 12px 35px rgba(104, 85, 220, 0.12),
+        0 0 22px rgba(70, 140, 255, 0.08);
+    background: rgba(255, 255, 255, 0.055);
+}
+
+.about-card:hover::before {
+    opacity: 1;
+}
+
+.about-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.about-card-number {
+    display: inline-block;
+    font-weight: 700;
+    background: linear-gradient(100deg, #a995ff, #68baff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+html.js-enabled .about-section.about-visible .about-card:nth-child(1) {
+    animation: aboutCardReveal 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.35s forwards;
+}
+
+html.js-enabled .about-section.about-visible .about-card:nth-child(2) {
+    animation: aboutCardReveal 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.5s forwards;
+}
+
+html.js-enabled .about-section.about-visible .about-card:nth-child(3) {
+    animation: aboutCardReveal 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.65s forwards;
+}
+
+html.js-enabled .about-section.about-visible .about-card:nth-child(4) {
+    animation: aboutCardReveal 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.8s forwards;
+}
+
+/* ABOUT ANIMATION KEYFRAMES */
+
+@keyframes aboutFadeUp {
     from {
         opacity: 0;
-        transform: translateY(22px);
+        transform: translateY(18px);
     }
 
     to {
@@ -224,33 +368,48 @@ html.js-enabled #home.hero-ready .hero-portrait-wrap {
     }
 }
 
-@keyframes heroTextReveal {
+@keyframes aboutBlurReveal {
     from {
         opacity: 0;
-        transform: translateY(110%);
+        filter: blur(12px);
+        transform: translateY(24px);
     }
 
     to {
         opacity: 1;
+        filter: blur(0);
         transform: translateY(0);
     }
 }
 
-@keyframes heroPortraitReveal {
+@keyframes aboutSlideLeft {
     from {
         opacity: 0;
-        clip-path: inset(12% 0 12% 0 round 28px);
-        transform: translateY(28px) scale(0.97);
+        transform: translateX(-28px);
     }
 
     to {
         opacity: 1;
-        clip-path: inset(0 0 0 0 round 24px);
+        transform: translateX(0);
+    }
+}
+
+@keyframes aboutCardReveal {
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
         transform: translateY(0) scale(1);
     }
 }
 
-/* MOBILE NAVIGATION */
+/* =========================================
+   MOBILE NAVIGATION
+========================================= */
+
 nav {
     position: relative;
 }
@@ -271,7 +430,10 @@ nav {
     }
 }
 
-/* RESPONSIVE TUNING */
+/* =========================================
+   RESPONSIVE TUNING
+========================================= */
+
 @media (max-width: 767px) {
     #home.hero-section {
         background:
@@ -283,9 +445,20 @@ nav {
     .hero-portrait-wrap {
         max-width: 330px;
     }
+
+    .about-section {
+        overflow: hidden;
+    }
+
+    .about-card:hover {
+        transform: translateY(-4px);
+    }
 }
 
-/* REDUCE MOTION FOR ACCESSIBILITY */
+/* =========================================
+   REDUCE MOTION FOR ACCESSIBILITY
+========================================= */
+
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
@@ -303,9 +476,22 @@ nav {
         clip-path: none !important;
     }
 
+    html.js-enabled .about-section .about-eyebrow,
+    html.js-enabled .about-section .about-title,
+    html.js-enabled .about-section .about-lead,
+    html.js-enabled .about-section .about-paragraph,
+    html.js-enabled .about-section .about-card {
+        opacity: 1;
+        animation: none !important;
+        filter: none !important;
+        transform: none !important;
+    }
+
     .hero-primary-button,
     .hero-secondary-button,
-    .hero-portrait {
-        transition: none;
+    .hero-portrait,
+    .about-card,
+    .about-card::before {
+        transition: none !important;
     }
 }
