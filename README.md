@@ -2,7 +2,7 @@
 
 A personal portfolio website showcasing my background, interests, technical knowledge, and projects as a Computer Science student.
 
-🌐 **Live Website:** [View My Portfolio](https://personal-portfolio-phi-three-92.vercel.app/)
+🌐 **Live Website:** [View My Portfolio](https://elmantouhid.me/)
 
 💻 **GitHub Repository:** [Mini Project 2](https://github.com/ElmanTouhid/mini-project-2)
 
@@ -104,7 +104,7 @@ The portfolio contains the following main sections:
 Computer Science Student
 
 - GitHub: [@ElmanTouhid](https://github.com/ElmanTouhid)
-- Portfolio: [personal-portfolio-phi-three-92.vercel.app](https://personal-portfolio-phi-three-92.vercel.app/)
+- Portfolio: https://elmantouhid.me/
 
 ---
 
