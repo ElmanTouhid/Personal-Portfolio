@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,10 +25,12 @@
     <!-- NAVBAR -->
     <nav class="relative flex items-center justify-between px-8 md:px-16 py-6 border-b border-white/10">
 
+        <!-- LOGO -->
         <a href="#home" class="text-2xl font-extrabold tracking-tight">
             ELMAN<span class="text-orange-500">.</span>
         </a>
 
+        <!-- DESKTOP NAVIGATION -->
         <div class="hidden md:flex items-center gap-10 text-sm text-gray-300">
             <a href="#home" class="hover:text-orange-500 transition">Home</a>
             <a href="#about" class="hover:text-orange-500 transition">About</a>
@@ -37,11 +38,13 @@
             <a href="#projects" class="hover:text-orange-500 transition">Projects</a>
         </div>
 
+        <!-- DESKTOP CONTACT BUTTON -->
         <a href="#contact"
             class="hidden md:inline-block bg-orange-500 hover:bg-orange-600 px-5 py-3 rounded-full text-sm font-semibold transition">
             Let's Talk
         </a>
 
+        <!-- MOBILE MENU BUTTON -->
         <button id="menu-btn"
             class="md:hidden text-white text-3xl focus:outline-none"
             aria-label="Toggle navigation"
@@ -50,6 +53,7 @@
             ☰
         </button>
 
+        <!-- MOBILE NAVIGATION -->
         <div id="mobile-menu"
             class="hidden absolute top-full left-0 w-full bg-[#111111] border-b border-white/10 p-8 flex-col gap-6 text-gray-300 z-50 md:hidden">
 
@@ -69,6 +73,7 @@
 
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-16 w-full">
 
+            <!-- LEFT: INTRODUCTION -->
             <div class="hero-copy">
 
                 <p class="hero-label uppercase tracking-[0.3em] text-sm font-semibold mb-6">
@@ -105,6 +110,7 @@
 
             </div>
 
+            <!-- RIGHT: PROFILE PHOTO -->
             <div class="hero-portrait-column flex justify-center md:justify-end">
 
                 <div class="hero-portrait-wrap relative w-full max-w-[380px]">
@@ -123,36 +129,37 @@
     </section>
 
 
-    <!-- ABOUT SECTION: PURPLE + BLUE -->
-    <section id="about" class="about-section px-8 md:px-16 py-28 border-t border-white/10">
+    <!-- ABOUT SECTION -->
+    <section id="about" class="px-8 md:px-16 py-28 border-t border-white/10">
 
         <div class="max-w-7xl mx-auto">
 
-            <p class="about-eyebrow text-purple-300 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+            <p class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
                 Get To Know Me
             </p>
 
-            <h2 class="about-title text-4xl md:text-6xl font-extrabold leading-tight mb-16">
+            <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-16">
                 A Little About
-                <span class="about-title-gradient">Me.</span>
+                <span class="text-orange-500">Me.</span>
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
 
-                <div class="about-left-content">
+                <!-- LEFT CONTENT -->
+                <div>
 
-                    <h3 class="about-lead text-2xl md:text-3xl font-bold leading-relaxed mb-7">
+                    <h3 class="text-2xl md:text-3xl font-bold leading-relaxed mb-7">
                         Exploring computer science.
-                        <span class="about-highlight">One problem at a time.</span>
+                        <span class="text-orange-500">One problem at a time.</span>
                     </h3>
 
-                    <p class="about-paragraph text-gray-400 text-lg leading-relaxed mb-6">
+                    <p class="text-gray-400 text-lg leading-relaxed mb-6">
                         I'm Elman Touhid, a CS student passionate about
                         programming, technology, and creating meaningful
                         digital experiences.
                     </p>
 
-                    <p class="about-paragraph text-gray-400 text-lg leading-relaxed">
+                    <p class="text-gray-400 text-lg leading-relaxed">
                         I'm continuously learning, experimenting with AI technologies,
                         improving my problem-solving skills, and exploring
                         different areas of computer science to discover which
@@ -164,10 +171,14 @@
 
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 about-cards">
 
-                    <div class="about-card bg-white/[0.04] border border-white/10 rounded-2xl p-7">
-                        <span class="about-card-number text-3xl">01.</span>
+                <!-- RIGHT CONTENT: ABOUT CARDS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                    <!-- CARD 1 -->
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+
+                        <span class="text-orange-500 text-3xl">01.</span>
 
                         <h4 class="text-xl font-bold mt-5 mb-3">
                             Problem Solving
@@ -178,10 +189,14 @@
                             by solving challenges across different online
                             platforms.
                         </p>
+
                     </div>
 
-                    <div class="about-card bg-white/[0.04] border border-white/10 rounded-2xl p-7">
-                        <span class="about-card-number text-3xl">02.</span>
+
+                    <!-- CARD 2 -->
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+
+                        <span class="text-orange-500 text-3xl">02.</span>
 
                         <h4 class="text-xl font-bold mt-5 mb-3">
                             CS Fundamentals
@@ -193,10 +208,14 @@
                             academic studies help strengthen our fundamentals
                             and build a solid foundation.
                         </p>
+
                     </div>
 
-                    <div class="about-card bg-white/[0.04] border border-white/10 rounded-2xl p-7">
-                        <span class="about-card-number text-3xl">03.</span>
+
+                    <!-- CARD 3 -->
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+
+                        <span class="text-orange-500 text-3xl">03.</span>
 
                         <h4 class="text-xl font-bold mt-5 mb-3">
                             Exploring Technology
@@ -208,10 +227,14 @@
                             staying up to date is important in a world where
                             technology keeps changing.
                         </p>
+
                     </div>
 
-                    <div class="about-card bg-white/[0.04] border border-white/10 rounded-2xl p-7">
-                        <span class="about-card-number text-3xl">04.</span>
+
+                    <!-- CARD 4 -->
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+
+                        <span class="text-orange-500 text-3xl">04.</span>
 
                         <h4 class="text-xl font-bold mt-5 mb-3">
                             AI & Project Building
@@ -223,6 +246,7 @@
                             AI and its different applications is important
                             to keep pace with the changing world.
                         </p>
+
                     </div>
 
                 </div>
@@ -253,90 +277,133 @@
                 I'm learning, practicing, and exploring.
             </p>
 
+            <!-- SKILLS GRID -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+                <!-- PROGRAMMING -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition duration-300">
+
                     <span class="text-orange-500 text-3xl font-bold">01</span>
+
                     <h3 class="text-2xl font-bold mt-6 mb-4">Programming</h3>
+
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Languages I currently use for programming
                         and problem solving.
                     </p>
+
                     <div class="flex flex-wrap gap-3">
                         <span class="px-4 py-2 rounded-full bg-orange-500/10 text-orange-400 text-sm">C</span>
                         <span class="px-4 py-2 rounded-full bg-orange-500/10 text-orange-400 text-sm">C++</span>
                     </div>
+
                 </div>
 
+
+                <!-- PROBLEM SOLVING -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition duration-300">
+
                     <span class="text-orange-500 text-3xl font-bold">02</span>
+
                     <h3 class="text-2xl font-bold mt-6 mb-4">Problem Solving</h3>
+
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Practicing logical thinking, coding challenges,
                         and algorithmic approaches.
                     </p>
+
                     <div class="flex flex-wrap gap-3">
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Codeforces</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Logic Building</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Algorithms</span>
                     </div>
+
                 </div>
 
+
+                <!-- COMPUTER SCIENCE -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition duration-300">
+
                     <span class="text-orange-500 text-3xl font-bold">03</span>
+
                     <h3 class="text-2xl font-bold mt-6 mb-4">Computer Science</h3>
+
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Building knowledge of core computer science
                         concepts and fundamentals.
                     </p>
+
                     <div class="flex flex-wrap gap-3">
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Data Structures</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">OOP</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Algorithms</span>
                     </div>
+
                 </div>
 
+
+                <!-- WEB TECHNOLOGIES -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition duration-300">
+
                     <span class="text-orange-500 text-3xl font-bold">04</span>
+
                     <h3 class="text-2xl font-bold mt-6 mb-4">Web Technologies</h3>
+
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Currently learning the fundamentals of
                         building websites.
                     </p>
+
                     <div class="flex flex-wrap gap-3">
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">HTML</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">CSS</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">JavaScript</span>
                     </div>
+
                     <p class="text-orange-400 text-xs mt-5">Currently Learning</p>
+
                 </div>
 
+
+                <!-- AI & TOOLS -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition duration-300">
+
                     <span class="text-orange-500 text-3xl font-bold">05</span>
+
                     <h3 class="text-2xl font-bold mt-6 mb-4">AI & Experimentation</h3>
+
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Exploring AI-powered tools and experimenting
                         with new ways to build projects.
                     </p>
+
                     <div class="flex flex-wrap gap-3">
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">AI Models</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">AI Tools</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Experimentation</span>
                     </div>
+
                 </div>
 
+
+                <!-- CONTINUOUS LEARNING -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition duration-300">
+
                     <span class="text-orange-500 text-3xl font-bold">06</span>
+
                     <h3 class="text-2xl font-bold mt-6 mb-4">Continuous Learning</h3>
+
                     <p class="text-gray-400 leading-relaxed mb-6">
                         Exploring different fields, discovering new
                         interests, and expanding my knowledge.
                     </p>
+
                     <div class="flex flex-wrap gap-3">
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Exploration</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Learning</span>
                         <span class="px-4 py-2 rounded-full bg-white/5 text-gray-300 text-sm">Growth</span>
                     </div>
+
                 </div>
 
             </div>
@@ -365,14 +432,19 @@
                 work built through programming, creativity, and teamwork.
             </p>
 
+
+            <!-- PROJECT GRID -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
 
+
+                <!-- PROJECT 1: CONTRIBUTО -->
                 <div class="group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
 
                     <div class="flex items-center justify-between mb-8">
                         <span class="text-orange-500 text-sm font-semibold tracking-widest">
                             01 / WEB PLATFORM
                         </span>
+
                         <span class="text-xs text-green-400 bg-green-400/10 px-3 py-2 rounded-full">
                             Live Project
                         </span>
@@ -397,11 +469,14 @@
                     </div>
 
                     <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://contributo-vkjj.vercel.app/" target="_blank" rel="noopener noreferrer"
+                        <a href="https://contributo-vkjj.vercel.app/"
+                            target="_blank" rel="noopener noreferrer"
                             class="text-orange-500 hover:text-orange-400 transition">
                             Live Website ↗
                         </a>
-                        <a href="https://github.com/ElmanTouhid/Contributo" target="_blank" rel="noopener noreferrer"
+
+                        <a href="https://github.com/ElmanTouhid/Contributo"
+                            target="_blank" rel="noopener noreferrer"
                             class="text-gray-300 hover:text-white transition">
                             GitHub ↗
                         </a>
@@ -409,12 +484,15 @@
 
                 </div>
 
+
+                <!-- PROJECT 2: MINI PROJECT 1 -->
                 <div class="group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
 
                     <div class="flex items-center justify-between mb-8">
                         <span class="text-orange-500 text-sm font-semibold tracking-widest">
                             02 / WEB DEVELOPMENT
                         </span>
+
                         <span class="text-xs text-green-400 bg-green-400/10 px-3 py-2 rounded-full">
                             Live Project
                         </span>
@@ -438,11 +516,14 @@
                     </div>
 
                     <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://mini-project-1-steel.vercel.app/" target="_blank" rel="noopener noreferrer"
+                        <a href="https://mini-project-1-steel.vercel.app/"
+                            target="_blank" rel="noopener noreferrer"
                             class="text-orange-500 hover:text-orange-400 transition">
                             Live Website ↗
                         </a>
-                        <a href="https://github.com/ElmanTouhid/Mini_Project_1" target="_blank" rel="noopener noreferrer"
+
+                        <a href="https://github.com/ElmanTouhid/Mini_Project_1"
+                            target="_blank" rel="noopener noreferrer"
                             class="text-gray-300 hover:text-white transition">
                             GitHub ↗
                         </a>
@@ -450,12 +531,15 @@
 
                 </div>
 
+
+                <!-- PROJECT 3: CGPA STATS -->
                 <div class="group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
 
                     <div class="flex items-center justify-between mb-8">
                         <span class="text-orange-500 text-sm font-semibold tracking-widest">
                             03 / C PROGRAMMING
                         </span>
+
                         <span class="text-xs text-blue-400 bg-blue-400/10 px-3 py-2 rounded-full">
                             Console Application
                         </span>
@@ -485,7 +569,8 @@
                     </div>
 
                     <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://github.com/ElmanTouhid/CGPA-stats" target="_blank" rel="noopener noreferrer"
+                        <a href="https://github.com/ElmanTouhid/CGPA-stats"
+                            target="_blank" rel="noopener noreferrer"
                             class="text-orange-500 hover:text-orange-400 transition">
                             GitHub Repository ↗
                         </a>
@@ -493,12 +578,15 @@
 
                 </div>
 
+
+                <!-- PROJECT 4: CIRCUITPAL -->
                 <div class="group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
 
                     <div class="flex items-center justify-between mb-8">
                         <span class="text-orange-500 text-sm font-semibold tracking-widest">
                             04 / EMBEDDED SYSTEMS
                         </span>
+
                         <span class="text-xs text-purple-400 bg-purple-400/10 px-3 py-2 rounded-full">
                             Hardware Project
                         </span>
@@ -528,13 +616,15 @@
                     </div>
 
                     <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://github.com/ElmanTouhid/Circuitpal" target="_blank" rel="noopener noreferrer"
+                        <a href="https://github.com/ElmanTouhid/Circuitpal"
+                            target="_blank" rel="noopener noreferrer"
                             class="text-orange-500 hover:text-orange-400 transition">
                             GitHub Repository ↗
                         </a>
                     </div>
 
                 </div>
+
 
             </div>
 
