@@ -1,112 +1,134 @@
+(function () {
+    "use strict";
 
-console.log("Elman's Portfolio is running!");
+    var root = document.documentElement;
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Enable entrance animations only when JavaScript is available.
-document.documentElement.classList.add("js-enabled");
+    // Tells the head failsafe that this script loaded.
+    root.classList.add("js-enabled", "js-ready");
 
-// =========================================
-// HERO ENTRANCE ANIMATION
-// =========================================
+    // =========================================
+    // HERO ENTRANCE
+    // Two frames so the hidden state paints before the animation starts.
+    // =========================================
+    var hero = document.getElementById("home");
 
-const heroSection = document.getElementById("home");
+    if (hero) {
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                hero.classList.add("hero-ready");
+            });
+        });
+    }
 
-if (heroSection && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    requestAnimationFrame(function () {
-        heroSection.classList.add("hero-ready");
+    // =========================================
+    // SCROLL REVEAL
+    // Children of [data-reveal-group] reveal as individual items.
+    // Items that enter view together are staggered by DOM order.
+    // =========================================
+    document.querySelectorAll("[data-reveal-group]").forEach(function (group) {
+        Array.prototype.forEach.call(group.children, function (child) {
+            child.setAttribute("data-reveal", "");
+        });
     });
-} else if (heroSection) {
-    heroSection.classList.add("hero-ready");
-}
 
-// =========================================
-// ABOUT SECTION SCROLL ANIMATION
-// =========================================
+    var revealTargets = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));
 
-const aboutSection = document.querySelector(".about-section");
-
-const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-).matches;
-
-if (aboutSection) {
-
-    // Show everything immediately if reduced motion is enabled.
-    if (prefersReducedMotion) {
-        aboutSection.classList.add("about-visible");
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+        revealTargets.forEach(function (el) {
+            el.classList.add("is-visible");
+        });
     } else {
-
-        const aboutObserver = new IntersectionObserver(
+        var revealObserver = new IntersectionObserver(
             function (entries, observer) {
+                var visible = entries
+                    .filter(function (entry) { return entry.isIntersecting; })
+                    .sort(function (a, b) {
+                        return (a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
+                    });
 
-                entries.forEach(function (entry) {
-
-                    if (entry.isIntersecting) {
-
-                        aboutSection.classList.add("about-visible");
-
-                        // Run the animation only once.
-                        observer.unobserve(aboutSection);
-
-                    }
-
+                visible.forEach(function (entry, index) {
+                    entry.target.style.setProperty("--reveal-delay", Math.min(index, 5) * 90 + "ms");
+                    entry.target.classList.add("is-visible");
+                    observer.unobserve(entry.target);
                 });
-
             },
-            {
-                threshold: 0.18
-            }
+            { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
         );
 
-        aboutObserver.observe(aboutSection);
+        revealTargets.forEach(function (el) {
+            revealObserver.observe(el);
+        });
     }
-}
 
-// =========================================
-// MOBILE NAVIGATION
-// =========================================
+    // =========================================
+    // ACTIVE SECTION IN NAVIGATION
+    // =========================================
+    var navLinks = document.querySelectorAll(".nav-link");
+    var sectionIds = ["home", "about", "skills", "projects", "contact"];
 
-const menuBtn = document.getElementById("menu-btn");
-const mobileMenu = document.getElementById("mobile-menu");
+    function setActive(id) {
+        navLinks.forEach(function (link) {
+            if (link.getAttribute("href") === "#" + id) {
+                link.setAttribute("aria-current", "true");
+            } else {
+                link.removeAttribute("aria-current");
+            }
+        });
+    }
 
-// TOGGLE MENU
+    if ("IntersectionObserver" in window) {
+        var spy = new IntersectionObserver(
+            function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        setActive(entry.target.id);
+                    }
+                });
+            },
+            { rootMargin: "-45% 0px -50% 0px" }
+        );
 
-if (menuBtn && mobileMenu) {
+        sectionIds.forEach(function (id) {
+            var section = document.getElementById(id);
+            if (section) {
+                spy.observe(section);
+            }
+        });
+    }
 
-    menuBtn.addEventListener("click", function () {
+    // =========================================
+    // MOBILE NAVIGATION
+    // =========================================
+    var menuBtn = document.getElementById("menu-btn");
+    var mobileMenu = document.getElementById("mobile-menu");
 
-        const isOpen = mobileMenu.classList.contains("hidden");
+    if (menuBtn && mobileMenu) {
 
-        if (isOpen) {
-            mobileMenu.classList.remove("hidden");
-            mobileMenu.classList.add("flex");
-        } else {
-            mobileMenu.classList.add("hidden");
-            mobileMenu.classList.remove("flex");
+        function setMenu(open) {
+            mobileMenu.classList.toggle("hidden", !open);
+            mobileMenu.classList.toggle("flex", open);
+            menuBtn.innerHTML = open ? "✕" : "☰";
+            menuBtn.setAttribute("aria-expanded", String(open));
         }
 
-        const menuIsOpen = !mobileMenu.classList.contains("hidden");
-
-        menuBtn.innerHTML = menuIsOpen ? "✕" : "☰";
-        menuBtn.setAttribute("aria-expanded", menuIsOpen);
-
-    });
-
-    // CLOSE MENU AFTER CLICKING A LINK
-
-    const mobileLinks = mobileMenu.querySelectorAll("a");
-
-    mobileLinks.forEach(function (link) {
-
-        link.addEventListener("click", function () {
-
-            mobileMenu.classList.add("hidden");
-            mobileMenu.classList.remove("flex");
-
-            menuBtn.innerHTML = "☰";
-            menuBtn.setAttribute("aria-expanded", "false");
-
+        menuBtn.addEventListener("click", function () {
+            setMenu(mobileMenu.classList.contains("hidden"));
         });
 
-    });
+        // Close after choosing a link
+        mobileMenu.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                setMenu(false);
+            });
+        });
 
-}
+        // Close with Escape and return focus to the button
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !mobileMenu.classList.contains("hidden")) {
+                setMenu(false);
+                menuBtn.focus();
+            }
+        });
+    }
+})();
