@@ -4,12 +4,18 @@
     var root = document.documentElement;
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // true  = animations replay every time a section scrolls back into view
+    // false = animations play once, then stay
+    var REPLAY = true;
+
     // Tells the head failsafe that this script loaded.
     root.classList.add("js-enabled", "js-ready");
 
     // =========================================
     // HERO ENTRANCE
     // Two frames so the hidden state paints before the animation starts.
+    // With REPLAY on, it resets once the hero is fully off screen and
+    // plays again when you scroll back up to it.
     // =========================================
     var hero = document.getElementById("home");
 
@@ -19,6 +25,21 @@
                 hero.classList.add("hero-ready");
             });
         });
+
+        if (REPLAY && !reduceMotion && "IntersectionObserver" in window) {
+            new IntersectionObserver(
+                function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.intersectionRatio === 0) {
+                            hero.classList.remove("hero-ready");
+                        } else if (entry.intersectionRatio >= 0.3) {
+                            hero.classList.add("hero-ready");
+                        }
+                    });
+                },
+                { threshold: [0, 0.3] }
+            ).observe(hero);
+        }
     }
 
     // =========================================
@@ -41,19 +62,35 @@
     } else {
         var revealObserver = new IntersectionObserver(
             function (entries, observer) {
-                var visible = entries
-                    .filter(function (entry) { return entry.isIntersecting; })
+                // Fully out of view: reset so it can animate again next time.
+                if (REPLAY) {
+                    entries.forEach(function (entry) {
+                        if (entry.intersectionRatio === 0) {
+                            entry.target.classList.remove("is-visible");
+                        }
+                    });
+                }
+
+                var entering = entries
+                    .filter(function (entry) {
+                        return entry.isIntersecting &&
+                            entry.intersectionRatio >= 0.15 &&
+                            !entry.target.classList.contains("is-visible");
+                    })
                     .sort(function (a, b) {
                         return (a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
                     });
 
-                visible.forEach(function (entry, index) {
+                // Items entering together are staggered by DOM order.
+                entering.forEach(function (entry, index) {
                     entry.target.style.setProperty("--reveal-delay", Math.min(index, 5) * 90 + "ms");
                     entry.target.classList.add("is-visible");
-                    observer.unobserve(entry.target);
+                    if (!REPLAY) {
+                        observer.unobserve(entry.target);
+                    }
                 });
             },
-            { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+            { threshold: [0, 0.15], rootMargin: "0px 0px -8% 0px" }
         );
 
         revealTargets.forEach(function (el) {
