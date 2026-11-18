@@ -1772,3 +1772,107 @@ html.js-enabled .proj-bgword:not(.anim-in) .bw-line {
         transform: none !important;
     }
 }
+
+
+/* =========================================================
+   CONTACT SECTION
+   "Get" / "In" / "Touch" slide in from the right one by one -> "Let's" from below,
+   "Start" from above, "a" out of nowhere, "Conversation." from the right -> glass card.
+========================================================= */
+#contact {
+    overflow-x: clip;
+}
+
+/* ---------- "Get In Touch" ---------- */
+.contact-eyebrow .ce {
+    display: inline-block;
+}
+
+html.js-enabled .contact-eyebrow:not(.anim-in) .ce {
+    opacity: 0;
+}
+
+.contact-eyebrow.anim-in .ce {
+    animation: contactFromRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--n, 0) * 450ms + 100ms);      /* slow: one word, then the next */
+}
+
+@keyframes contactFromRight {
+    from { opacity: 0; transform: translateX(45vw); filter: blur(5px); }
+    to   { opacity: 1; transform: translateX(0);    filter: blur(0); }
+}
+
+/* ---------- "Let's Start a Conversation." ---------- */
+.contact-title .cw {
+    display: inline-block;
+}
+
+html.js-enabled .contact-title:not(.anim-in) .cw {
+    opacity: 0;
+}
+
+.contact-title.anim-in .cw-lets {
+    animation: contactFromBelow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s both;
+}
+
+.contact-title.anim-in .cw-start {
+    animation: contactFromAbove 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 1.15s both;
+}
+
+.contact-title.anim-in .cw-a {
+    animation: contactFromNowhere 1s ease-out 1.45s both;
+}
+
+.contact-title.anim-in .cw-conv {
+    animation:
+        contactFromRight 1.05s cubic-bezier(0.2, 0.8, 0.2, 1) 1.7s both,
+        ideasGlow 1.4s ease-out 2.7s 1;
+}
+
+@keyframes contactFromBelow {
+    from { opacity: 0; transform: translateY(70px); filter: blur(5px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+
+@keyframes contactFromAbove {
+    from { opacity: 0; transform: translateY(-70px); filter: blur(5px); }
+    to   { opacity: 1; transform: translateY(0);     filter: blur(0); }
+}
+
+/* materialises in place: blurred and oversized, a flicker, then sharp */
+@keyframes contactFromNowhere {
+    0%   { opacity: 0;   filter: blur(12px); transform: scale(1.8); }
+    40%  { opacity: 0.7; filter: blur(3px); }
+    52%  { opacity: 0.15; }
+    70%  { opacity: 1;   filter: blur(0);    transform: scale(1);   text-shadow: 0 0 22px rgba(249,115,22,0.6); }
+    100% { opacity: 1;   filter: blur(0);    transform: none;       text-shadow: 0 0 0 rgba(249,115,22,0); }
+}
+
+/* ---------- liquid glass card ---------- */
+.contact-glass-wrap {
+    position: relative;
+    max-width: 680px;
+}
+
+.contact-glass-wrap .about-glass-blob {
+    right: auto;
+    left: -50px;
+    top: -40px;
+}
+
+html.js-enabled .contact-glass-wrap:not(.anim-in) {
+    opacity: 0;
+}
+
+.contact-glass-wrap.anim-in {
+    animation: aboutGlassIn 1s var(--ease-out) 1.9s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.js-enabled .contact-eyebrow .ce,
+    html.js-enabled .contact-title .cw,
+    html.js-enabled .contact-glass-wrap {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+}
