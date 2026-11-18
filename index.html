@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=13">
+    <link rel="stylesheet" href="style.css?v=14">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -811,19 +811,33 @@
 
         <div class="max-w-7xl mx-auto">
 
-            <p data-reveal class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
-                Get In Touch
+            <!-- Eyebrow: "Get", then "In", then "Touch" slide in slowly from the right -->
+            <p data-contact-anim="eyebrow" class="contact-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+                <span class="ce" style="--n:0">Get</span>
+                <span class="ce" style="--n:1">In</span>
+                <span class="ce" style="--n:2">Touch</span>
             </p>
 
-            <h2 data-reveal class="text-4xl md:text-6xl font-extrabold leading-tight mb-8">
-                Let's Start a
-                <span class="text-orange-500">Conversation.</span>
+            <!-- Title: "Let's" rises from below, "Start" drops from above, "a" appears out of nowhere,
+                 "Conversation." flies in from the right -->
+            <h2 data-contact-anim="title" class="contact-title text-4xl md:text-6xl font-extrabold leading-tight mb-10">
+                <span class="cw cw-lets">Let's</span>
+                <span class="cw cw-start">Start</span>
+                <span class="cw cw-a">a</span>
+                <span class="cw cw-conv text-orange-500">Conversation.</span>
             </h2>
 
-            <p data-reveal class="text-gray-400 text-lg max-w-2xl leading-relaxed mb-12">
-                Have an interesting idea, want to collaborate on a project,
-                or just want to connect? Feel free to reach out.
-            </p>
+            <!-- Description: liquid glass card (same glass as the About intro) -->
+            <div data-contact-anim="glass" class="contact-glass-wrap mb-12">
+                <div class="about-glass-blob" aria-hidden="true"></div>
+                <div class="about-glass contact-glass">
+                    <span class="about-glass-sheen" aria-hidden="true"></span>
+                    <p class="relative text-gray-200 text-lg leading-relaxed">
+                        Have an interesting idea, want to collaborate on a project,
+                        or just want to connect? Feel free to reach out.
+                    </p>
+                </div>
+            </div>
 
             <div data-reveal class="flex flex-wrap gap-5">
 
@@ -836,6 +850,12 @@
                     target="_blank" rel="noopener noreferrer"
                     class="border border-white/20 hover:border-orange-500 px-8 py-4 rounded-full font-semibold transition">
                     GitHub ↗
+                </a>
+
+                <a href="https://www.linkedin.com/in/elman-touhid-7601a3396/"
+                    target="_blank" rel="noopener noreferrer"
+                    class="border border-white/20 hover:border-orange-500 px-8 py-4 rounded-full font-semibold transition">
+                    LinkedIn ↗
                 </a>
 
             </div>
@@ -868,7 +888,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=11"></script>
+    <script src="script.js?v=12"></script>
 
 </body>
 
