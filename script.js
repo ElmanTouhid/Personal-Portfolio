@@ -711,6 +711,154 @@
     }
 
     // =========================================
+    // SKILLS SECTION: letter / word entrances + Netflix-style row
+    // =========================================
+    var skills = document.getElementById("skills");
+
+    if (skills) {
+        // "What I'm Exploring" -> letters that arrive from the left, last letter first
+        var sEye = skills.querySelector(".skills-eyebrow");
+        if (sEye) {
+            var sText = sEye.textContent.trim();
+            sEye.textContent = "";
+            var sSr = document.createElement("span");
+            sSr.className = "skills-sr";
+            sSr.textContent = sText;
+            var sVis = document.createElement("span");
+            sVis.setAttribute("aria-hidden", "true");
+            var letters = [];
+            sText.split(" ").forEach(function (word, wi) {
+                if (wi) sVis.appendChild(document.createTextNode(" "));
+                var w = document.createElement("span");
+                w.style.cssText = "display:inline-block;white-space:nowrap";
+                word.split("").forEach(function (ch) {
+                    var l = document.createElement("span");
+                    l.className = "sl";
+                    l.textContent = ch;
+                    w.appendChild(l);
+                    letters.push(l);
+                });
+                sVis.appendChild(w);
+            });
+            // EXPLORING builds first (G, N, I ... E), then I'M (M, ', I), then WHAT (T, A, H, W)
+            letters.reverse().forEach(function (l, k) { l.style.setProperty("--k", k); });
+            sEye.appendChild(sSr);
+            sEye.appendChild(sVis);
+        }
+
+        var skillsTrackEl = document.getElementById("skills-track");
+        if (skillsTrackEl) Array.prototype.forEach.call(skillsTrackEl.children, function (c, i) { c.style.setProperty("--c", Math.min(i, 3)); });
+
+        var skillAnims = skills.querySelectorAll("[data-skills-anim]");
+        if (reduceMotion || !hasIO) {
+            skillAnims.forEach(function (el) { el.classList.add("anim-in"); });
+        } else {
+            var skillsIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.intersectionRatio === 0) {
+                        if (REPLAY) e.target.classList.remove("anim-in");
+                    } else if (e.intersectionRatio >= 0.2) {
+                        e.target.classList.add("anim-in");
+                    }
+                });
+            }, { threshold: [0, 0.2] });
+            skillAnims.forEach(function (el) { skillsIO.observe(el); });
+        }
+
+        // ----- Sideways row -----
+        var track = document.getElementById("skills-track");
+        var fill = skills.querySelector(".skills-progress-fill");
+
+        if (track) {
+            var target = 0, anim = 0, dragging2 = false, moved = false, dStartX = 0, dStartScroll = 0;
+            var maxScroll = function () { return Math.max(0, track.scrollWidth - track.clientWidth); };
+            var clampS = function (v) { return Math.max(0, Math.min(maxScroll(), v)); };
+
+            var updateRow = function () {
+                var max = maxScroll(), x = track.scrollLeft;
+                track.classList.toggle("can-left", x > 4);
+                track.classList.toggle("can-right", x < max - 4);
+                if (fill) {
+                    var ratio = track.clientWidth / track.scrollWidth;      // share of the row on screen
+                    fill.style.width = Math.max(12, ratio * 100) + "%";
+                    var p = max ? x / max : 0;
+                    fill.style.setProperty("--p", (p * (1 / Math.max(ratio, 0.12) - 1) * 100) + "%");
+                }
+            };
+
+            var glide = function () {
+                var cur = track.scrollLeft, diff = target - cur;
+                if (Math.abs(diff) < 0.6) { track.scrollLeft = target; anim = 0; updateRow(); return; }
+                track.scrollLeft = cur + diff * 0.16;
+                anim = requestAnimationFrame(glide);
+            };
+            var glideTo = function (v) {
+                target = clampS(v);
+                if (reduceMotion) { track.scrollLeft = target; updateRow(); return; }
+                if (!anim) anim = requestAnimationFrame(glide);
+            };
+
+            // Mouse wheel: vertical scrolling over the row moves the cards sideways.
+            // At either end the page scrolls normally again.
+            track.addEventListener("wheel", function (e) {
+                var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                if (e.deltaMode === 1) d *= 40;
+                if (!d) return;
+                if (!anim) target = track.scrollLeft;
+                var max = maxScroll();
+                if ((d < 0 && target <= 0.5) || (d > 0 && target >= max - 0.5)) return;
+                e.preventDefault();
+                glideTo(target + d * 1.1);
+            }, { passive: false });
+
+            // Drag with the mouse
+            track.addEventListener("pointerdown", function (e) {
+                if (e.pointerType !== "mouse" || e.button !== 0) return;
+                dragging2 = true; moved = false;
+                dStartX = e.clientX; dStartScroll = track.scrollLeft;
+                if (anim) { cancelAnimationFrame(anim); anim = 0; }
+            });
+            window.addEventListener("pointermove", function (e) {
+                if (!dragging2) return;
+                var dx = e.clientX - dStartX;
+                if (!moved && Math.abs(dx) > 4) { moved = true; track.classList.add("is-dragging"); }
+                if (moved) { track.scrollLeft = dStartScroll - dx; target = track.scrollLeft; }
+            });
+            window.addEventListener("pointerup", function () {
+                if (!dragging2) return;
+                dragging2 = false;
+                track.classList.remove("is-dragging");
+                if (!moved) return;
+                // settle on the nearest card
+                var best = 0, bestD = Infinity;
+                Array.prototype.forEach.call(track.children, function (c) {
+                    var dd = Math.abs(c.offsetLeft - track.scrollLeft);
+                    if (dd < bestD) { bestD = dd; best = c.offsetLeft; }
+                });
+                glideTo(best);
+            });
+            track.addEventListener("click", function (e) {
+                if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+            }, true);
+            track.addEventListener("dragstart", function (e) { e.preventDefault(); });
+
+            // Keyboard
+            track.addEventListener("keydown", function (e) {
+                var step = track.children[1] ? track.children[1].offsetLeft - track.children[0].offsetLeft : 300;
+                if (e.key === "ArrowRight") { e.preventDefault(); glideTo((anim ? target : track.scrollLeft) + step); }
+                else if (e.key === "ArrowLeft") { e.preventDefault(); glideTo((anim ? target : track.scrollLeft) - step); }
+            });
+
+            track.addEventListener("scroll", function () {
+                if (!anim && !dragging2) target = track.scrollLeft;
+                updateRow();
+            }, { passive: true });
+            window.addEventListener("resize", updateRow);
+            updateRow();
+        }
+    }
+
+    // =========================================
     // MOBILE NAVIGATION
     // =========================================
     var menuBtn = document.getElementById("menu-btn");
