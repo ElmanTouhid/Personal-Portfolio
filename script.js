@@ -997,6 +997,8 @@
             };
 
             var render = function () {
+                // background lettering drifts gently against the turn (bounded, loops smoothly)
+                stage.parentNode.style.setProperty("--drift", (-Math.sin(pos * 2 * Math.PI / COUNT) * 60).toFixed(1) + "px");
                 var front = wrapIdx(Math.round(pos));
                 pSlots.forEach(function (sl, i) {
                     var r = relPos(i), a = Math.abs(r);
