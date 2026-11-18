@@ -19,111 +19,14 @@
     var h1 = hero && hero.querySelector("h1");
 
     // =========================================
-    // HEADLINE SCRAMBLE (letters flicker, then lock in left to right)
-    // =========================================
-    var NOISE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<>/{}[]#$%&*+=";
-    var scrambleToken = 0;
-
-    function restoreText() {
-        if (!h1) return;
-        h1.classList.remove("scrambling");
-        h1.querySelectorAll("[data-scramble]").forEach(function (el) {
-            if (el.dataset.text) el.textContent = el.dataset.text;
-        });
-    }
-
-    function buildChars(el) {
-        var text = el.dataset.text || (el.dataset.text = el.textContent);
-        var chars = [];
-        el.textContent = "";
-        text.split(/( )/).forEach(function (part) {
-            if (part === " ") { el.appendChild(document.createTextNode(" ")); return; }
-            var word = document.createElement("span");
-            word.style.cssText = "display:inline-block;white-space:nowrap";
-            part.split("").forEach(function (ch) {
-                var s = document.createElement("span");
-                s.className = "scramble-char";
-                s.textContent = ch;
-                word.appendChild(s);
-                chars.push({ s: s, ch: ch, el: el, at: 0, swap: 0, done: false });
-            });
-            el.appendChild(word);
-        });
-        chars.forEach(function (c) {          // lock widths so nothing reflows while scrambling
-            c.s.style.width = c.s.getBoundingClientRect().width + "px";
-            c.s.style.textAlign = "center";
-        });
-        return chars;
-    }
-
-    function runScramble() {
-        if (!h1 || reduceMotion) return;
-        var token = ++scrambleToken;
-        restoreText();
-
-        var lines = h1.querySelectorAll(".hero-line-inner");
-        var all = [];
-        lines.forEach(function (line, li) {
-            var i = 0;
-            line.querySelectorAll("[data-scramble]").forEach(function (el) {
-                buildChars(el).forEach(function (c) {
-                    c.at = (280 + li * 130 + i++ * 50) * SLOW;
-                    all.push(c);
-                });
-            });
-        });
-        h1.classList.add("scrambling");
-
-        var t0 = performance.now();
-        (function tick(now) {
-            if (token !== scrambleToken) return;
-            var t = now - t0, left = 0;
-            all.forEach(function (c) {
-                if (c.done) return;
-                if (t >= c.at || c.ch === ".") {
-                    c.s.textContent = c.ch;
-                    c.s.classList.remove("is-noise");
-                    c.done = true;
-                } else {
-                    left++;
-                    if (t >= c.swap) {
-                        c.s.textContent = NOISE.charAt(Math.floor(Math.random() * NOISE.length));
-                        c.s.classList.add("is-noise");
-                        c.swap = t + 45;
-                    }
-                }
-            });
-            // Finish each word element as soon as its letters are placed
-            h1.querySelectorAll("[data-scramble]").forEach(function (el) {
-                var pending = all.some(function (c) { return c.el === el && !c.done; });
-                if (!pending && el.firstChild && el.firstChild.nodeType === 1 && el.dataset.text) {
-                    el.textContent = el.dataset.text;
-                    if (el.classList.contains("ideas-word")) {
-                        el.classList.remove("glow-once");
-                        void el.offsetWidth;
-                        el.classList.add("glow-once");
-                    }
-                }
-            });
-            if (left > 0) requestAnimationFrame(tick);
-            else h1.classList.remove("scrambling");
-        })(t0);
-    }
-
-    // =========================================
     // HERO ENTRANCE + REPLAY
     // =========================================
     function setHeroReady(on) {
         if (!hero) return;
         if (on && !hero.classList.contains("hero-ready")) {
-            hero.classList.add("hero-ready");
-            var fonts = document.fonts && document.fonts.ready;
-            Promise.race([fonts || Promise.resolve(), new Promise(function (r) { setTimeout(r, 900); })])
-                .then(runScramble);
+            hero.classList.add("hero-ready");      // headline words blur into focus (CSS)
         } else if (!on && hero.classList.contains("hero-ready")) {
             hero.classList.remove("hero-ready");
-            scrambleToken++;
-            restoreText();
         }
     }
 
