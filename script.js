@@ -765,6 +765,36 @@
             skillAnims.forEach(function (el) { skillsIO.observe(el); });
         }
 
+        // ----- Aurora: glows lean toward the cursor (desktop) -----
+        var aurora = skills.querySelector(".skills-aurora");
+        if (aurora && finePointer && !reduceMotion) {
+            var ax = 0, ay = 0, atx = 0, aty = 0, aRaf = 0;
+            var auroraStep = function () {
+                ax += (atx - ax) * 0.05;
+                ay += (aty - ay) * 0.05;
+                aurora.style.setProperty("--fx", ax.toFixed(1) + "px");
+                aurora.style.setProperty("--fy", ay.toFixed(1) + "px");
+                if (Math.abs(atx - ax) > 0.3 || Math.abs(aty - ay) > 0.3) aRaf = requestAnimationFrame(auroraStep);
+                else aRaf = 0;
+            };
+            var auroraKick = function () { if (!aRaf) aRaf = requestAnimationFrame(auroraStep); };
+
+            skills.addEventListener("pointermove", function (e) {
+                if (e.pointerType !== "mouse") return;
+                var r = skills.getBoundingClientRect();
+                // offset from the section centre, scaled down so the glow only leans, never jumps
+                atx = Math.max(-220, Math.min(220, (e.clientX - r.left - r.width / 2) * 0.3));
+                aty = Math.max(-160, Math.min(160, (e.clientY - r.top - r.height / 2) * 0.3));
+                skills.classList.add("aurora-active");
+                auroraKick();
+            });
+            skills.addEventListener("pointerleave", function () {
+                atx = aty = 0;
+                skills.classList.remove("aurora-active");
+                auroraKick();
+            });
+        }
+
         // ----- Sideways row -----
         var track = document.getElementById("skills-track");
         var fill = skills.querySelector(".skills-progress-fill");
