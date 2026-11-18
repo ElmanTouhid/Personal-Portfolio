@@ -365,16 +365,8 @@ section[id] {
 }
 
 /* =========================================================
-   HEADLINE SCRAMBLE + "Ideas." GLOW
+   "Ideas." GLOW
 ========================================================= */
-.scramble-char {
-    display: inline-block;
-}
-
-.scrambling .scramble-char.is-noise {
-    color: rgba(249, 115, 22, 0.85);
-}
-
 .ideas-word.glow-once {
     animation: ideasGlow 2.1s ease-out 1;
 }
@@ -1872,6 +1864,58 @@ html.js-enabled .contact-glass-wrap:not(.anim-in) {
     html.js-enabled .contact-eyebrow .ce,
     html.js-enabled .contact-title .cw,
     html.js-enabled .contact-glass-wrap {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+}
+
+
+/* =========================================================
+   HERO HEADLINE: blur-to-focus (replaces the old scramble)
+   Each word starts soft and out of focus, then sharpens into place one after
+   another, like a camera lens focusing. "Ideas." glows once it is sharp.
+========================================================= */
+.hero-line {
+    overflow: visible;                       /* let the blur breathe instead of being clipped */
+}
+
+html.js-enabled #home:not(.hero-ready) .hero-line-inner {
+    transform: none;
+}
+
+#home.hero-ready .hero-line:nth-child(1) .hero-line-inner,
+#home.hero-ready .hero-line:nth-child(2) .hero-line-inner {
+    animation: none;
+}
+
+.hw {
+    display: inline-block;
+}
+
+html.js-enabled #home:not(.hero-ready) .hw {
+    opacity: 0;
+}
+
+#home.hero-ready .hw {
+    animation: heroFocus 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--w, 0) * 330ms + 300ms);
+}
+
+#home.hero-ready .hw.ideas-word {
+    animation:
+        heroFocus 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+        ideasGlow 2.1s ease-out 1;
+    animation-delay: calc(var(--w, 0) * 330ms + 300ms), 1.9s;
+}
+
+@keyframes heroFocus {
+    0%   { opacity: 0;   filter: blur(18px); transform: translateY(8px) scale(1.04); }
+    45%  { opacity: 0.85; }
+    100% { opacity: 1;   filter: blur(0);    transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.js-enabled #home .hw {
         opacity: 1 !important;
         animation: none !important;
     }
