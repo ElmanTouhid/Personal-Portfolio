@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -166,9 +166,12 @@
 
 
     <!-- ABOUT SECTION -->
-    <section id="about" class="px-8 md:px-16 py-28">
+    <section id="about" class="relative px-8 md:px-16 py-28">
 
-        <div class="max-w-7xl mx-auto">
+        <!-- Binary background: dim 0s and 1s, pulled toward the cursor; hold the mouse and swipe to flip them (script.js) -->
+        <canvas id="about-bits" class="about-bits" aria-hidden="true"></canvas>
+
+        <div class="relative z-10 max-w-7xl mx-auto">
 
             <!-- Eyebrow: letters materialise out of nowhere (split by script.js) -->
             <p data-about-anim="eyebrow" class="about-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
@@ -759,7 +762,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
 
 </body>
 
