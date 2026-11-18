@@ -320,6 +320,250 @@
     }
 
     // =========================================
+    // ABOUT SECTION: text animations + swipeable card stack
+    // =========================================
+    var about = document.getElementById("about");
+
+    if (about) {
+        var rand = function (a, b) { return a + Math.random() * (b - a); };
+
+        // Wrap every word of an element in <span class="cls">, keeping nested spans (e.g. the orange part)
+        var splitWords = function (root, cls) {
+            var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+            var nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+            nodes.forEach(function (tn) {
+                var frag = document.createDocumentFragment();
+                tn.textContent.split(/(\s+)/).forEach(function (part) {
+                    if (!part) return;
+                    if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+                    var s = document.createElement("span");
+                    s.className = cls;
+                    s.textContent = part;
+                    frag.appendChild(s);
+                });
+                tn.parentNode.replaceChild(frag, tn);
+            });
+        };
+
+        // "Get To Know Me" -> one span per letter (screen readers get the plain text)
+        var eyebrow = about.querySelector(".about-eyebrow");
+        if (eyebrow) {
+            var eyeText = eyebrow.textContent.trim();
+            eyebrow.textContent = "";
+            var sr = document.createElement("span");
+            sr.className = "about-sr";
+            sr.textContent = eyeText;
+            var vis = document.createElement("span");
+            vis.setAttribute("aria-hidden", "true");
+            eyeText.split(" ").forEach(function (word, wi) {
+                if (wi) vis.appendChild(document.createTextNode(" "));
+                var w = document.createElement("span");
+                w.style.cssText = "display:inline-block;white-space:nowrap";
+                word.split("").forEach(function (ch) {
+                    var l = document.createElement("span");
+                    l.className = "el";
+                    l.textContent = ch;
+                    w.appendChild(l);
+                });
+                vis.appendChild(w);
+            });
+            eyebrow.appendChild(sr);
+            eyebrow.appendChild(vis);
+        }
+
+        var scatter = about.querySelector(".about-scatter");
+        if (scatter) splitWords(scatter, "sw");
+
+        // Fresh random positions each time the section comes into view
+        var prepare = function (el) {
+            var kind = el.getAttribute("data-about-anim");
+            if (kind === "eyebrow") {
+                el.querySelectorAll(".el").forEach(function (l) {
+                    l.style.setProperty("--ed", Math.round(rand(0, 480)) + "ms");
+                });
+            } else if (kind === "scatter") {
+                el.querySelectorAll(".sw").forEach(function (w) {
+                    var ang = rand(0, Math.PI * 2), dist = rand(140, 280);
+                    w.style.setProperty("--sx", Math.round(Math.cos(ang) * dist) + "px");
+                    w.style.setProperty("--sy", Math.round(Math.sin(ang) * dist * 0.6) + "px");
+                    w.style.setProperty("--sr", Math.round(rand(-40, 40)) + "deg");
+                    w.style.setProperty("--sd", Math.round(rand(0, 220)) + "ms");
+                });
+            } else if (kind === "deck") {
+                var dc = el.querySelectorAll(".deck-card");
+                dc.forEach(function (c) {
+                    var pos = parseFloat(c.style.getPropertyValue("--pos")) || 0;
+                    c.style.setProperty("--deal", dc.length - 1 - pos);   // back cards land first
+                });
+            }
+        };
+
+        var aboutAnims = about.querySelectorAll("[data-about-anim]");
+        if (reduceMotion || !hasIO) {
+            aboutAnims.forEach(function (el) { el.classList.add("anim-in"); });
+        } else {
+            var aboutIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    var el = e.target;
+                    if (e.intersectionRatio === 0) {
+                        if (REPLAY) el.classList.remove("anim-in");
+                    } else if (e.intersectionRatio >= 0.2 && !el.classList.contains("anim-in")) {
+                        prepare(el);
+                        el.classList.add("anim-in");
+                    }
+                });
+            }, { threshold: [0, 0.2] });
+            aboutAnims.forEach(function (el) { aboutIO.observe(el); });
+        }
+
+        // Liquid glass: light follows the cursor
+        var glass = about.querySelector(".about-glass");
+        if (glass && finePointer && !reduceMotion) {
+            glass.addEventListener("pointermove", function (e) {
+                var r = glass.getBoundingClientRect();
+                glass.style.setProperty("--gx", (e.clientX - r.left) + "px");
+                glass.style.setProperty("--gy", (e.clientY - r.top) + "px");
+            });
+        }
+
+        // ----- Card stack -----
+        var deck = document.getElementById("about-deck");
+        if (deck) {
+            var cards = Array.prototype.slice.call(deck.querySelectorAll(".deck-card"));
+            var order = cards.slice();
+            var busy = false;
+            var FLY_MS = reduceMotion ? 0 : 430;
+            var THRESHOLD = 80;
+            var current = about.querySelector(".deck-current");
+            var hint = about.querySelector(".deck-hint");
+            var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+
+            var layout = function (progress) {
+                var p = progress || 0;
+                order.forEach(function (c, i) {
+                    c.style.setProperty("--pos", i === 0 ? 0 : Math.max(0, i - p));
+                    c.style.zIndex = String(order.length - i);
+                    c.classList.toggle("is-top", i === 0);
+                    c.setAttribute("aria-hidden", i === 0 ? "false" : "true");
+                });
+                if (current) current.textContent = pad(cards.indexOf(order[0]) + 1);
+            };
+
+            var used = function () { if (hint) hint.classList.add("is-used"); };
+
+            var setDrag = function (c, dx) {
+                c.style.setProperty("--dx", dx + "px");
+                c.style.setProperty("--rot", (dx * 0.06).toFixed(2) + "deg");
+            };
+
+            // Top card flies off to the left, then tucks in at the back
+            var next = function () {
+                if (busy) return;
+                busy = true;
+                used();
+                var top = order[0];
+                order.push(order.shift());
+                layout();
+                top.style.setProperty("--pos", 0);
+                top.style.zIndex = String(order.length + 1);
+                top.classList.add("deck-fly");
+                top.style.setProperty("--dx", -(top.offsetWidth * 1.25) + "px");
+                top.style.setProperty("--rot", "-14deg");
+                setTimeout(function () {
+                    top.classList.remove("deck-fly");
+                    setDrag(top, 0);
+                    layout();
+                    busy = false;
+                }, FLY_MS);
+            };
+
+            // Last card comes back in from the left onto the top
+            var prev = function () {
+                if (busy) return;
+                busy = true;
+                used();
+                var card = order.pop();
+                order.unshift(card);
+                card.classList.add("no-anim", "deck-fly");
+                card.style.zIndex = String(order.length + 1);
+                card.style.setProperty("--pos", 0);
+                card.style.setProperty("--dx", -(card.offsetWidth * 1.25) + "px");
+                card.style.setProperty("--rot", "-14deg");
+                void card.offsetWidth;                       // commit the off-screen start
+                card.classList.remove("no-anim", "deck-fly");
+                setDrag(card, 0);
+                layout();
+                setTimeout(function () { busy = false; }, FLY_MS);
+            };
+
+            layout();
+
+            // Drag with the mouse / swipe with a finger
+            var dragging = false, startX = 0, dx = 0;
+
+            deck.addEventListener("pointerdown", function (e) {
+                if (busy || e.button > 0 || !order[0].contains(e.target)) return;
+                dragging = true;
+                startX = e.clientX;
+                dx = 0;
+                deck.classList.add("is-dragging");
+                try { deck.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+            });
+
+            deck.addEventListener("pointermove", function (e) {
+                if (!dragging) return;
+                dx = e.clientX - startX;
+                setDrag(order[0], dx);
+                layout(dx < 0 ? Math.min(1, -dx / 200) : 0);    // next card rises as you pull
+            });
+
+            var endDrag = function () {
+                if (!dragging) return;
+                dragging = false;
+                deck.classList.remove("is-dragging");
+                if (dx <= -THRESHOLD) {
+                    next();
+                } else {
+                    setDrag(order[0], 0);
+                    layout();
+                    if (dx >= THRESHOLD) prev();
+                }
+                dx = 0;
+            };
+            deck.addEventListener("pointerup", endDrag);
+            deck.addEventListener("pointercancel", endDrag);
+            deck.addEventListener("lostpointercapture", endDrag);
+
+            // Two-finger trackpad swipe sideways
+            var wheelAcc = 0, wheelLock = 0;
+            deck.addEventListener("wheel", function (e) {
+                if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+                e.preventDefault();
+                var now = Date.now();
+                if (now < wheelLock) return;
+                wheelAcc += e.deltaX;
+                if (Math.abs(wheelAcc) > 60) {
+                    if (wheelAcc > 0) next(); else prev();
+                    wheelAcc = 0;
+                    wheelLock = now + 650;
+                }
+            }, { passive: false });
+
+            // Keyboard + buttons
+            deck.addEventListener("keydown", function (e) {
+                if (e.key === "ArrowRight") { e.preventDefault(); next(); }
+                else if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+            });
+            about.querySelectorAll("[data-deck]").forEach(function (b) {
+                b.addEventListener("click", function () {
+                    if (b.getAttribute("data-deck") === "next") next(); else prev();
+                });
+            });
+        }
+    }
+
+    // =========================================
     // MOBILE NAVIGATION
     // =========================================
     var menuBtn = document.getElementById("menu-btn");
