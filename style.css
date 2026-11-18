@@ -1034,3 +1034,20 @@ html.js-enabled .about-deck-wrap:not(.anim-in) .deck-controls {
         transform: none;
     }
 }
+
+
+/* Glass card now holds both intro paragraphs */
+.about-glass {
+    padding: 30px 34px;
+}
+
+.about-glass-divider {
+    position: relative;
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(249,115,22,0.55), rgba(255,255,255,0.12) 45%, transparent);
+}
+
+@media (max-width: 639px) {
+    .about-glass { padding: 24px 22px; }
+}
