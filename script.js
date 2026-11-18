@@ -1157,6 +1157,39 @@
     })();
 
     // =========================================
+    // CONTACT SECTION: word entrances + glass card light
+    // =========================================
+    var contact = document.getElementById("contact");
+
+    if (contact) (function () {
+        var cAnims = contact.querySelectorAll("[data-contact-anim]");
+        if (reduceMotion || !hasIO) {
+            cAnims.forEach(function (el) { el.classList.add("anim-in"); });
+        } else {
+            var cIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.intersectionRatio === 0) {
+                        if (REPLAY) e.target.classList.remove("anim-in");
+                    } else if (e.intersectionRatio >= 0.2) {
+                        e.target.classList.add("anim-in");
+                    }
+                });
+            }, { threshold: [0, 0.2] });
+            cAnims.forEach(function (el) { cIO.observe(el); });
+        }
+
+        // the glass card's light follows the cursor (desktop)
+        var cGlass = contact.querySelector(".contact-glass");
+        if (cGlass && finePointer && !reduceMotion) {
+            cGlass.addEventListener("pointermove", function (e) {
+                var r = cGlass.getBoundingClientRect();
+                cGlass.style.setProperty("--gx", (e.clientX - r.left) + "px");
+                cGlass.style.setProperty("--gy", (e.clientY - r.top) + "px");
+            });
+        }
+    })();
+
+    // =========================================
     // MOBILE NAVIGATION
     // =========================================
     var menuBtn = document.getElementById("menu-btn");
