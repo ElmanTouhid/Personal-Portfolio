@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -326,9 +326,16 @@
 
 
     <!-- SKILLS SECTION -->
-    <section id="skills" class="px-8 md:px-16 py-28 border-t border-white/10">
+    <section id="skills" class="relative px-8 md:px-16 py-28 border-t border-white/10">
 
-        <div class="max-w-7xl mx-auto">
+        <!-- Aurora background: slow, dim glows that lean toward the cursor (script.js) -->
+        <div class="skills-aurora" aria-hidden="true">
+            <span class="sa sa-1"></span>
+            <span class="sa sa-2"></span>
+            <span class="sa sa-3"></span>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto">
 
             <!-- Eyebrow: letters fly in from the left, last letter first (split by script.js) -->
             <p data-skills-anim="eyebrow" class="skills-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
@@ -776,7 +783,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=7"></script>
+    <script src="script.js?v=8"></script>
 
 </body>
 
