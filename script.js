@@ -324,7 +324,7 @@
     // =========================================
     var about = document.getElementById("about");
 
-    if (about) {
+    if (about) (function () {
         var rand = function (a, b) { return a + Math.random() * (b - a); };
 
         // Wrap every word of an element in <span class="cls">, keeping nested spans (e.g. the orange part)
@@ -708,14 +708,14 @@
                 });
             });
         }
-    }
+    })();
 
     // =========================================
     // SKILLS SECTION: letter / word entrances + Netflix-style row
     // =========================================
     var skills = document.getElementById("skills");
 
-    if (skills) {
+    if (skills) (function () {
         // "What I'm Exploring" -> letters that arrive from the left, last letter first
         var sEye = skills.querySelector(".skills-eyebrow");
         if (sEye) {
@@ -886,7 +886,273 @@
             window.addEventListener("resize", updateRow);
             updateRow();
         }
-    }
+    })();
+
+    // =========================================
+    // PROJECTS SECTION: header entrances, bent title, 3D ring carousel
+    // =========================================
+    var projects = document.getElementById("projects");
+
+    if (projects) (function () {
+        // ----- Title: split into letters, then bend the two ends back into the screen -----
+        var pTitle = projects.querySelector(".proj-title");
+        var pLetters = [];
+        if (pTitle) {
+            var pWalker = document.createTreeWalker(pTitle, NodeFilter.SHOW_TEXT, null);
+            var pNodes = [];
+            while (pWalker.nextNode()) pNodes.push(pWalker.currentNode);
+            pNodes.forEach(function (tn) {
+                var frag = document.createDocumentFragment();
+                tn.textContent.split(/(\s+)/).forEach(function (part) {
+                    if (!part) return;
+                    if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+                    var w = document.createElement("span");
+                    w.className = "pw";
+                    part.split("").forEach(function (ch) {
+                        var l = document.createElement("span");
+                        l.className = "pl";
+                        l.textContent = ch;
+                        w.appendChild(l);
+                        pLetters.push(l);
+                    });
+                    frag.appendChild(w);
+                });
+                tn.parentNode.replaceChild(frag, tn);
+            });
+        }
+
+        var bendTitle = function () {
+            if (!pLetters.length) return;
+            var small = window.innerWidth < 640;
+            var DEPTH = small ? 22 : 46, TURN = small ? 9 : 18, FLAT = 0.35;
+            pLetters.forEach(function (l) { l.style.setProperty("--bz", "0px"); l.style.setProperty("--by", "0deg"); });
+            // group letters by line, so each line bends on its own
+            var lines = {};
+            pLetters.forEach(function (l) {
+                var key = Math.round(l.offsetTop / 10);
+                (lines[key] = lines[key] || []).push(l);
+            });
+            Object.keys(lines).forEach(function (k) {
+                var row = lines[k];
+                var left = Infinity, right = -Infinity;
+                row.forEach(function (l) {
+                    left = Math.min(left, l.offsetLeft);
+                    right = Math.max(right, l.offsetLeft + l.offsetWidth);
+                });
+                var mid = (left + right) / 2, half = Math.max(1, (right - left) / 2);
+                row.forEach(function (l) {
+                    var t = (l.offsetLeft + l.offsetWidth / 2 - mid) / half;     // -1 (left end) .. 1 (right end)
+                    var e = Math.max(0, Math.abs(t) - FLAT) / (1 - FLAT);         // 0 in the middle, 1 at the ends
+                    l.style.setProperty("--bz", (-DEPTH * e * e).toFixed(1) + "px");
+                    l.style.setProperty("--by", ((t < 0 ? -1 : 1) * TURN * e).toFixed(1) + "deg");
+                });
+            });
+        };
+        bendTitle();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(bendTitle);
+        window.addEventListener("resize", bendTitle);
+
+        // ----- 3D ring -----
+        var stage = document.getElementById("proj-stage");
+        var ring = document.getElementById("proj-ring");
+        var pSlots = ring ? Array.prototype.slice.call(ring.querySelectorAll(".proj-slot")) : [];
+        var dotsBox = projects.querySelector(".proj-dots");
+        var spinIn = function () {};
+
+        if (stage && ring && pSlots.length) {
+            var COUNT = pSlots.length;
+            var ARC = 40;                  // degrees between neighbouring cards on the ring
+            var PX_PER_CARD = 320;         // drag distance that turns one card
+            var pos = 0, target = 0, pRaf = 0, ease = 0.12;   // pos/target in "cards"
+            var pDragging = false, pMoved = false, pStartX = 0, pStartAngle = 0, lastX = 0, lastT = 0, vel = 0;
+            var dots = [];
+
+            var measure = function () {
+                stage.classList.add("measuring");
+                var maxH = 0;
+                pSlots.forEach(function (sl) {
+                    sl.style.height = "auto";
+                    sl.firstElementChild.style.height = "auto";
+                });
+                var cardW = pSlots[0].offsetWidth;
+                pSlots.forEach(function (sl) { maxH = Math.max(maxH, sl.firstElementChild.offsetHeight); });
+                pSlots.forEach(function (sl) {
+                    sl.style.height = "";
+                    sl.firstElementChild.style.height = "";
+                });
+                stage.classList.remove("measuring");
+                var radius = cardW * (window.innerWidth < 640 ? 1.05 : 1.0);
+                stage.style.setProperty("--card-h", Math.ceil(maxH) + "px");
+                stage.style.setProperty("--r", Math.round(radius) + "px");
+            };
+
+            var wrapIdx = function (k) { return ((k % COUNT) + COUNT) % COUNT; };
+            var current = function () { return wrapIdx(Math.round(target)); };
+            // where card i sits relative to the front, wrapped so the ring loops forever
+            var relPos = function (i) {
+                var r = (i - pos) % COUNT;
+                if (r > COUNT / 2) r -= COUNT;
+                if (r < -COUNT / 2) r += COUNT;
+                return r;
+            };
+
+            var render = function () {
+                var front = wrapIdx(Math.round(pos));
+                pSlots.forEach(function (sl, i) {
+                    var r = relPos(i), a = Math.abs(r);
+                    sl.style.setProperty("--slot-a", (r * ARC).toFixed(2) + "deg");
+                    sl.style.setProperty("--lit", (1 - Math.min(a / 2, 1) * 0.6).toFixed(3));
+                    sl.style.setProperty("--vis", Math.max(0, Math.min(1, 2.2 - a)).toFixed(3));
+                    sl.style.zIndex = String(10 - Math.round(a * 2));
+                    var isFront = i === front;
+                    if (sl.classList.contains("is-front") !== isFront) {
+                        sl.classList.toggle("is-front", isFront);
+                        sl.setAttribute("aria-hidden", isFront ? "false" : "true");
+                        sl.querySelectorAll("a").forEach(function (a) { a.tabIndex = isFront ? 0 : -1; });
+                    }
+                });
+                var cur = current();
+                dots.forEach(function (d, i) { d.setAttribute("aria-selected", i === cur ? "true" : "false"); });
+            };
+
+            var loop = function () {
+                pRaf = 0;
+                if (!pDragging) pos += (target - pos) * ease;
+                if (Math.abs(target - pos) < 0.002 && !pDragging) { pos = target; ease = 0.12; }
+                render();
+                if (pDragging || pos !== target) pRaf = requestAnimationFrame(loop);
+            };
+            var kickRing = function () {
+                if (reduceMotion && !pDragging) { pos = target; render(); return; }
+                if (!pRaf) pRaf = requestAnimationFrame(loop);
+            };
+
+            var goTo = function (k) {
+                var diff = ((k - current()) % COUNT + COUNT) % COUNT;
+                if (diff > COUNT / 2) diff -= COUNT;
+                target += diff;
+                kickRing();
+            };
+            var nextP = function () { target += 1; kickRing(); };
+            var prevP = function () { target -= 1; kickRing(); };
+
+            // dots, one per project (labelled with the project name)
+            if (dotsBox) {
+                pSlots.forEach(function (sl, i) {
+                    var h = sl.querySelector("h3");
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.className = "proj-dot";
+                    b.setAttribute("role", "tab");
+                    b.setAttribute("aria-label", h ? h.textContent.trim() : "Project " + (i + 1));
+                    b.addEventListener("click", function () { goTo(i); });
+                    dotsBox.appendChild(b);
+                    dots.push(b);
+                });
+            }
+            projects.querySelectorAll("[data-proj]").forEach(function (b) {
+                b.addEventListener("click", function () {
+                    if (b.getAttribute("data-proj") === "next") nextP(); else prevP();
+                });
+            });
+
+            // drag with the mouse / swipe with a finger
+            stage.addEventListener("pointerdown", function (e) {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                pDragging = true; pMoved = false;
+                pStartX = lastX = e.clientX; lastT = performance.now(); vel = 0;
+                pStartAngle = pos;
+                kickRing();
+            });
+            window.addEventListener("pointermove", function (e) {
+                if (!pDragging) return;
+                var dx = e.clientX - pStartX;
+                if (!pMoved && Math.abs(dx) > 6) { pMoved = true; stage.classList.add("is-dragging"); }
+                if (!pMoved) return;
+                var now = performance.now();
+                vel = (e.clientX - lastX) / Math.max(1, now - lastT);   // px per ms
+                lastX = e.clientX; lastT = now;
+                pos = pStartAngle - dx / PX_PER_CARD;     // drag left -> next project
+                target = pos;
+            });
+            var endPDrag = function () {
+                if (!pDragging) return;
+                pDragging = false;
+                stage.classList.remove("is-dragging");
+                if (pMoved) {
+                    var flung = pos - vel * 160 / PX_PER_CARD;      // a quick flick carries on a little
+                    target = Math.round(flung);
+                }
+                kickRing();
+            };
+            window.addEventListener("pointerup", endPDrag);
+            window.addEventListener("pointercancel", endPDrag);
+
+            // a drag is not a click; clicking a side card turns the ring to it
+            stage.addEventListener("click", function (e) {
+                if (pMoved) { e.preventDefault(); e.stopPropagation(); pMoved = false; return; }
+                var sl = e.target.closest(".proj-slot");
+                if (sl && !sl.classList.contains("is-front")) {
+                    e.preventDefault();
+                    goTo(pSlots.indexOf(sl));
+                }
+            }, true);
+            stage.addEventListener("dragstart", function (e) { e.preventDefault(); });
+
+            // mouse wheel / trackpad: one project per scroll gesture
+            var pWheelAcc = 0, pWheelLock = 0;
+            stage.addEventListener("wheel", function (e) {
+                var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                if (!d) return;
+                e.preventDefault();
+                var now = Date.now();
+                if (now < pWheelLock) return;
+                pWheelAcc += d;
+                if (Math.abs(pWheelAcc) > 30) {
+                    if (pWheelAcc > 0) nextP(); else prevP();
+                    pWheelAcc = 0;
+                    pWheelLock = now + 420;
+                }
+            }, { passive: false });
+
+            stage.addEventListener("keydown", function (e) {
+                if (e.key === "ArrowRight") { e.preventDefault(); nextP(); }
+                else if (e.key === "ArrowLeft") { e.preventDefault(); prevP(); }
+            });
+
+            measure();
+            render();
+            if ("ResizeObserver" in window) new ResizeObserver(function () { measure(); }).observe(stage);
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
+            // when the section appears the ring spins into place
+            spinIn = function () {
+                if (reduceMotion) return;
+                pos = target - 2.5;
+                ease = 0.055;
+                kickRing();
+            };
+        }
+
+        // ----- entrances (replay on re-entry, like the other sections) -----
+        var projAnims = projects.querySelectorAll("[data-proj-anim]");
+        if (reduceMotion || !hasIO) {
+            projAnims.forEach(function (el) { el.classList.add("anim-in"); });
+        } else {
+            var projIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    var el = e.target;
+                    if (e.intersectionRatio === 0) {
+                        if (REPLAY) el.classList.remove("anim-in");
+                    } else if (e.intersectionRatio >= 0.2 && !el.classList.contains("anim-in")) {
+                        el.classList.add("anim-in");
+                        if (el.getAttribute("data-proj-anim") === "ring") spinIn();
+                    }
+                });
+            }, { threshold: [0, 0.2] });
+            projAnims.forEach(function (el) { projIO.observe(el); });
+        }
+    })();
 
     // =========================================
     // MOBILE NAVIGATION
