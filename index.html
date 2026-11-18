@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -170,13 +170,17 @@
 
         <div class="max-w-7xl mx-auto">
 
-            <p data-reveal class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+            <!-- Eyebrow: letters materialise out of nowhere (split by script.js) -->
+            <p data-about-anim="eyebrow" class="about-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
                 Get To Know Me
             </p>
 
-            <h2 data-reveal class="text-4xl md:text-6xl font-extrabold leading-tight mb-16">
-                A Little About
-                <span class="text-orange-500">Me.</span>
+            <!-- Title: words fly in from the right one at a time, then close up together -->
+            <h2 data-about-anim="title" class="about-title text-4xl md:text-6xl font-extrabold leading-tight mb-16">
+                <span class="aw" style="--i:0">A</span>
+                <span class="aw" style="--i:1">Little</span>
+                <span class="aw" style="--i:2">About</span>
+                <span class="aw aw-me text-orange-500" style="--i:3">Me.</span>
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
@@ -184,16 +188,24 @@
                 <!-- LEFT CONTENT -->
                 <div>
 
-                    <h3 data-reveal class="text-2xl md:text-3xl font-bold leading-relaxed mb-7">
+                    <!-- Subheading: words start scattered and converge (split by script.js) -->
+                    <h3 data-about-anim="scatter" class="about-scatter text-2xl md:text-3xl font-bold leading-relaxed mb-7">
                         Exploring computer science.
                         <span class="text-orange-500">One problem at a time.</span>
                     </h3>
 
-                    <p data-reveal class="text-gray-400 text-lg leading-relaxed mb-6">
-                        I'm Elman Touhid, a CS student passionate about
-                        programming, technology, and creating meaningful
-                        digital experiences.
-                    </p>
+                    <!-- Intro: liquid glass card -->
+                    <div data-about-anim="glass" class="about-glass-wrap mb-8">
+                        <div class="about-glass-blob" aria-hidden="true"></div>
+                        <div class="about-glass">
+                            <span class="about-glass-sheen" aria-hidden="true"></span>
+                            <p class="relative text-gray-200 text-lg leading-relaxed">
+                                I'm <span class="text-white font-semibold">Elman Touhid</span>, a CS student passionate about
+                                programming, technology, and creating meaningful
+                                digital experiences.
+                            </p>
+                        </div>
+                    </div>
 
                     <p data-reveal class="text-gray-400 text-lg leading-relaxed">
                         I'm continuously learning, experimenting with AI technologies,
@@ -208,11 +220,15 @@
                 </div>
 
 
-                <!-- RIGHT CONTENT: ABOUT CARDS -->
-                <div data-reveal-group class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <!-- RIGHT CONTENT: ABOUT CARDS (swipeable stack, built by script.js; plain grid without JS) -->
+                <div data-about-anim="deck" class="about-deck-wrap">
+
+                <div id="about-deck" class="about-deck grid grid-cols-1 sm:grid-cols-2 gap-5"
+                    tabindex="0" role="region" aria-roledescription="card stack"
+                    aria-label="About me cards. Drag, swipe or use the arrow keys to see the next card.">
 
                     <!-- CARD 1 -->
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+                    <div class="deck-card bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
 
                         <span class="text-orange-500 text-3xl">01.</span>
 
@@ -230,7 +246,7 @@
 
 
                     <!-- CARD 2 -->
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+                    <div class="deck-card bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
 
                         <span class="text-orange-500 text-3xl">02.</span>
 
@@ -249,7 +265,7 @@
 
 
                     <!-- CARD 3 -->
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+                    <div class="deck-card bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
 
                         <span class="text-orange-500 text-3xl">03.</span>
 
@@ -268,7 +284,7 @@
 
 
                     <!-- CARD 4 -->
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
+                    <div class="deck-card bg-white/[0.04] border border-white/10 rounded-2xl p-7 hover:border-orange-500/50 transition duration-300">
 
                         <span class="text-orange-500 text-3xl">04.</span>
 
@@ -284,6 +300,16 @@
                         </p>
 
                     </div>
+
+                </div>
+
+                <!-- Stack controls (shown only when JS is running) -->
+                <div class="deck-controls">
+                    <button type="button" class="deck-btn" data-deck="prev" aria-label="Previous card">←</button>
+                    <span class="deck-count" aria-live="polite"><span class="deck-current">01</span> / 04</span>
+                    <button type="button" class="deck-btn" data-deck="next" aria-label="Next card">→</button>
+                    <span class="deck-hint" aria-hidden="true">Drag left for the next card</span>
+                </div>
 
                 </div>
 
@@ -731,7 +757,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=5"></script>
 
 </body>
 
