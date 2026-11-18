@@ -280,7 +280,16 @@
         }
 
         var scatter = about.querySelector(".about-scatter");
-        if (scatter) splitWords(scatter, "sw");
+        if (scatter) {
+            splitWords(scatter, "sw");
+            scatter.querySelectorAll(".sw").forEach(function (w, k) { w.style.setProperty("--k", k); });
+            // the "//" that makes the line look like a code comment at first
+            var slash = document.createElement("span");
+            slash.className = "ac-slash";
+            slash.setAttribute("aria-hidden", "true");
+            slash.textContent = "//\u00a0";
+            scatter.insertBefore(slash, scatter.querySelector(".sw"));
+        }
 
         // Fresh random positions each time the section comes into view
         var prepare = function (el) {
@@ -288,14 +297,6 @@
             if (kind === "eyebrow") {
                 el.querySelectorAll(".el").forEach(function (l) {
                     l.style.setProperty("--ed", Math.round(rand(0, 480) * SLOW) + "ms");
-                });
-            } else if (kind === "scatter") {
-                el.querySelectorAll(".sw").forEach(function (w) {
-                    var ang = rand(0, Math.PI * 2), dist = rand(140, 280);
-                    w.style.setProperty("--sx", Math.round(Math.cos(ang) * dist) + "px");
-                    w.style.setProperty("--sy", Math.round(Math.sin(ang) * dist * 0.6) + "px");
-                    w.style.setProperty("--sr", Math.round(rand(-40, 40)) + "deg");
-                    w.style.setProperty("--sd", Math.round(rand(0, 220) * SLOW) + "ms");
                 });
             } else if (kind === "deck") {
                 var dc = el.querySelectorAll(".deck-card");
