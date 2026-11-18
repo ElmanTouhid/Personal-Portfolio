@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -506,213 +506,291 @@
 
         <div class="max-w-7xl mx-auto">
 
-            <p data-reveal class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
-                Selected Work
-            </p>
+            <!-- Header (centred) -->
+            <div class="proj-head text-center">
 
-            <h2 data-reveal class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-                Projects &
-                <span class="text-orange-500">Experiments.</span>
-            </h2>
+                <!-- "Selected" slides in from the left, "Work" from the right; they meet in the middle -->
+                <p data-proj-anim="eyebrow" class="proj-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+                    <span class="pe-left">Selected</span> <span class="pe-right">Work</span>
+                </p>
 
-            <p data-reveal class="text-gray-400 text-lg max-w-2xl mb-16 leading-relaxed">
-                A collection of personal projects and collaborative
-                work built through programming, creativity, and teamwork.
-            </p>
+                <!-- Straight line, both ends bent slightly back into the screen (letters split by script.js) -->
+                <h2 data-proj-anim="title" class="proj-title text-4xl md:text-6xl font-extrabold leading-tight mb-8">
+                    Projects &amp;
+                    <span class="text-orange-500">Experiments.</span>
+                </h2>
 
-
-            <!-- PROJECT GRID -->
-            <div data-reveal-group class="grid grid-cols-1 md:grid-cols-2 gap-7">
-
-
-                <!-- PROJECT 1: CONTRIBUTО -->
-                <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
-
-                    <div class="flex items-center justify-between mb-8">
-                        <span class="text-orange-500 text-sm font-semibold tracking-widest">
-                            01 / WEB PLATFORM
-                        </span>
-
-                        <span class="text-xs text-green-400 bg-green-400/10 px-3 py-2 rounded-full">
-                            Live Project
-                        </span>
-                    </div>
-
-                    <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
-                        Contributo<span class="text-orange-500">.</span>
-                    </h3>
-
-                    <p class="text-gray-400 leading-relaxed mb-7">
-                        An academic resource-sharing platform designed
-                        to help students discover and share useful
-                        learning materials organized by courses and
-                        syllabus segments.
+                <div data-reveal class="proj-desc-card">
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        A collection of personal projects and collaborative
+                        work built through programming, creativity, and teamwork.
                     </p>
+                </div>
 
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">React</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">TypeScript</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Supabase</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Tailwind CSS</span>
+            </div>
+
+
+            <!-- PROJECTS: 3D ring (mouse wheel / drag / swipe / arrow keys). Plain 2-column grid without JS. -->
+            <div data-proj-anim="ring" class="proj-carousel">
+
+                <div id="proj-stage" class="proj-stage" tabindex="0" role="region" aria-roledescription="carousel"
+                    aria-label="Projects. Drag, swipe, scroll or use the arrow keys to turn the carousel.">
+
+                <div id="proj-ring" class="proj-ring grid grid-cols-1 md:grid-cols-2 gap-7">
+
+                <div class="proj-slot">
+                    <!-- PROJECT 1: CONTRIBUTО -->
+                    <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
+
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="text-orange-500 text-sm font-semibold tracking-widest">
+                                01 / WEB PLATFORM
+                            </span>
+
+                            <span class="text-xs text-green-400 bg-green-400/10 px-3 py-2 rounded-full">
+                                Live Project
+                            </span>
+                        </div>
+
+                        <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
+                            Contributo<span class="text-orange-500">.</span>
+                        </h3>
+
+                        <p class="text-gray-400 leading-relaxed mb-7">
+                            An academic resource-sharing platform designed
+                            to help students discover and share useful
+                            learning materials organized by courses and
+                            syllabus segments.
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">React</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">TypeScript</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Supabase</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Tailwind CSS</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-5 text-sm font-semibold">
+                            <a href="https://contributo-vkjj.vercel.app/"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-orange-500 hover:text-orange-400 transition">
+                                Live Website ↗
+                            </a>
+
+                            <a href="https://github.com/ElmanTouhid/Contributo"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-gray-300 hover:text-white transition">
+                                GitHub ↗
+                            </a>
+                        </div>
+
                     </div>
+                </div>
 
-                    <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://contributo-vkjj.vercel.app/"
-                            target="_blank" rel="noopener noreferrer"
-                            class="text-orange-500 hover:text-orange-400 transition">
-                            Live Website ↗
-                        </a>
+                <div class="proj-slot">
+                    <!-- PROJECT 2: MINI PROJECT 1 -->
+                    <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
 
-                        <a href="https://github.com/ElmanTouhid/Contributo"
-                            target="_blank" rel="noopener noreferrer"
-                            class="text-gray-300 hover:text-white transition">
-                            GitHub ↗
-                        </a>
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="text-orange-500 text-sm font-semibold tracking-widest">
+                                02 / WEB DEVELOPMENT
+                            </span>
+
+                            <span class="text-xs text-green-400 bg-green-400/10 px-3 py-2 rounded-full">
+                                Live Project
+                            </span>
+                        </div>
+
+                        <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
+                            Mini Project 1<span class="text-orange-500">.</span>
+                        </h3>
+
+                        <p class="text-gray-400 leading-relaxed mb-7">
+                            A personal profile website introducing my
+                            background, interests, skills, projects, and
+                            contact information. One of my early experiments
+                            with building websites.
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">HTML</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">CSS</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Supabase</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-5 text-sm font-semibold">
+                            <a href="https://mini-project-1-steel.vercel.app/"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-orange-500 hover:text-orange-400 transition">
+                                Live Website ↗
+                            </a>
+
+                            <a href="https://github.com/ElmanTouhid/Mini_Project_1"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-gray-300 hover:text-white transition">
+                                GitHub ↗
+                            </a>
+                        </div>
+
                     </div>
+                </div>
+
+                <div class="proj-slot">
+                    <!-- PROJECT 3: CGPA STATS -->
+                    <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
+
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="text-orange-500 text-sm font-semibold tracking-widest">
+                                03 / C PROGRAMMING
+                            </span>
+
+                            <span class="text-xs text-blue-400 bg-blue-400/10 px-3 py-2 rounded-full">
+                                Console Application
+                            </span>
+                        </div>
+
+                        <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
+                            CGPA Stats<span class="text-orange-500">.</span>
+                        </h3>
+
+                        <p class="text-gray-400 leading-relaxed mb-7">
+                            A collaborative student academic management system
+                            developed in C as a university group project.
+                            The system features automated CGPA calculations,
+                            student rankings, class statistics, record
+                            management, and CSV exports.
+                        </p>
+
+                        <p class="text-orange-400 text-sm mb-7">
+                            Team Project · Collaborative Development
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">C</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">File Handling</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Data Structures</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">CMake</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-5 text-sm font-semibold">
+                            <a href="https://github.com/ElmanTouhid/CGPA-stats"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-orange-500 hover:text-orange-400 transition">
+                                GitHub Repository ↗
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="proj-slot">
+                    <!-- PROJECT 4: CIRCUITPAL -->
+                    <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
+
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="text-orange-500 text-sm font-semibold tracking-widest">
+                                04 / EMBEDDED SYSTEMS
+                            </span>
+
+                            <span class="text-xs text-purple-400 bg-purple-400/10 px-3 py-2 rounded-full">
+                                Hardware Project
+                            </span>
+                        </div>
+
+                        <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
+                            CircuitPal<span class="text-orange-500">.</span>
+                        </h3>
+
+                        <p class="text-gray-400 leading-relaxed mb-7">
+                            A collaborative ESP32-based multifunctional gadget
+                            featuring a 128×64 OLED display. It combines an
+                            NTP clock, stopwatch, countdown timer, live weather
+                            updates, and an animated GIF player.
+                        </p>
+
+                        <p class="text-orange-400 text-sm mb-7">
+                            Team Project · Collaborative Development
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">ESP32</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">C++</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Arduino</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">OLED</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">OpenWeatherMap API</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-5 text-sm font-semibold">
+                            <a href="https://github.com/ElmanTouhid/Circuitpal"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-orange-500 hover:text-orange-400 transition">
+                                GitHub Repository ↗
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="proj-slot">
+                    <!-- PROJECT 5: MINI PROJECT 2 (this portfolio) -->
+                    <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
+
+                        <div class="flex items-center justify-between mb-8">
+                            <span class="text-orange-500 text-sm font-semibold tracking-widest">
+                                05 / WEB DEVELOPMENT
+                            </span>
+
+                            <span class="text-xs text-green-400 bg-green-400/10 px-3 py-2 rounded-full">
+                                Live Project
+                            </span>
+                        </div>
+
+                        <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
+                            Mini Project 2<span class="text-orange-500">.</span>
+                        </h3>
+
+                        <p class="text-gray-400 leading-relaxed mb-7">
+                            This portfolio. A responsive personal website with
+                            custom animations, interactive backgrounds, and a
+                            3D project carousel, built and deployed as part of
+                            my Software Development coursework.
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">HTML</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">CSS</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">JavaScript</span>
+                            <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Tailwind CSS</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-5 text-sm font-semibold">
+                            <a href="https://elmantouhid.me/"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-orange-500 hover:text-orange-400 transition">
+                                Live Website ↗
+                            </a>
+
+                            <a href="https://github.com/ElmanTouhid/mini-project-2"
+                                target="_blank" rel="noopener noreferrer"
+                                class="text-gray-300 hover:text-white transition">
+                                GitHub ↗
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
 
                 </div>
 
-
-                <!-- PROJECT 2: MINI PROJECT 1 -->
-                <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
-
-                    <div class="flex items-center justify-between mb-8">
-                        <span class="text-orange-500 text-sm font-semibold tracking-widest">
-                            02 / WEB DEVELOPMENT
-                        </span>
-
-                        <span class="text-xs text-green-400 bg-green-400/10 px-3 py-2 rounded-full">
-                            Live Project
-                        </span>
-                    </div>
-
-                    <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
-                        Mini Project 1<span class="text-orange-500">.</span>
-                    </h3>
-
-                    <p class="text-gray-400 leading-relaxed mb-7">
-                        A personal profile website introducing my
-                        background, interests, skills, projects, and
-                        contact information. One of my early experiments
-                        with building websites.
-                    </p>
-
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">HTML</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">CSS</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Supabase</span>
-                    </div>
-
-                    <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://mini-project-1-steel.vercel.app/"
-                            target="_blank" rel="noopener noreferrer"
-                            class="text-orange-500 hover:text-orange-400 transition">
-                            Live Website ↗
-                        </a>
-
-                        <a href="https://github.com/ElmanTouhid/Mini_Project_1"
-                            target="_blank" rel="noopener noreferrer"
-                            class="text-gray-300 hover:text-white transition">
-                            GitHub ↗
-                        </a>
-                    </div>
-
                 </div>
 
-
-                <!-- PROJECT 3: CGPA STATS -->
-                <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
-
-                    <div class="flex items-center justify-between mb-8">
-                        <span class="text-orange-500 text-sm font-semibold tracking-widest">
-                            03 / C PROGRAMMING
-                        </span>
-
-                        <span class="text-xs text-blue-400 bg-blue-400/10 px-3 py-2 rounded-full">
-                            Console Application
-                        </span>
-                    </div>
-
-                    <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
-                        CGPA Stats<span class="text-orange-500">.</span>
-                    </h3>
-
-                    <p class="text-gray-400 leading-relaxed mb-7">
-                        A collaborative student academic management system
-                        developed in C as a university group project.
-                        The system features automated CGPA calculations,
-                        student rankings, class statistics, record
-                        management, and CSV exports.
-                    </p>
-
-                    <p class="text-orange-400 text-sm mb-7">
-                        Team Project · Collaborative Development
-                    </p>
-
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">C</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">File Handling</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Data Structures</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">CMake</span>
-                    </div>
-
-                    <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://github.com/ElmanTouhid/CGPA-stats"
-                            target="_blank" rel="noopener noreferrer"
-                            class="text-orange-500 hover:text-orange-400 transition">
-                            GitHub Repository ↗
-                        </a>
-                    </div>
-
+                <!-- Carousel controls (shown only when JS is running) -->
+                <div class="proj-controls">
+                    <button type="button" class="deck-btn" data-proj="prev" aria-label="Previous project">←</button>
+                    <div class="proj-dots" role="tablist" aria-label="Choose a project"></div>
+                    <button type="button" class="deck-btn" data-proj="next" aria-label="Next project">→</button>
                 </div>
-
-
-                <!-- PROJECT 4: CIRCUITPAL -->
-                <div class="card-lift group bg-white/[0.04] border border-white/10 rounded-3xl p-8 hover:border-orange-500/50 transition duration-300">
-
-                    <div class="flex items-center justify-between mb-8">
-                        <span class="text-orange-500 text-sm font-semibold tracking-widest">
-                            04 / EMBEDDED SYSTEMS
-                        </span>
-
-                        <span class="text-xs text-purple-400 bg-purple-400/10 px-3 py-2 rounded-full">
-                            Hardware Project
-                        </span>
-                    </div>
-
-                    <h3 class="text-3xl font-bold mb-4 group-hover:text-orange-500 transition">
-                        CircuitPal<span class="text-orange-500">.</span>
-                    </h3>
-
-                    <p class="text-gray-400 leading-relaxed mb-7">
-                        A collaborative ESP32-based multifunctional gadget
-                        featuring a 128×64 OLED display. It combines an
-                        NTP clock, stopwatch, countdown timer, live weather
-                        updates, and an animated GIF player.
-                    </p>
-
-                    <p class="text-orange-400 text-sm mb-7">
-                        Team Project · Collaborative Development
-                    </p>
-
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">ESP32</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">C++</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">Arduino</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">OLED</span>
-                        <span class="text-xs px-3 py-2 rounded-full bg-white/5 text-gray-300">OpenWeatherMap API</span>
-                    </div>
-
-                    <div class="flex flex-wrap gap-5 text-sm font-semibold">
-                        <a href="https://github.com/ElmanTouhid/Circuitpal"
-                            target="_blank" rel="noopener noreferrer"
-                            class="text-orange-500 hover:text-orange-400 transition">
-                            GitHub Repository ↗
-                        </a>
-                    </div>
-
-                </div>
-
+                <p class="proj-hint" aria-hidden="true">Drag, swipe or scroll on the cards to turn the ring</p>
 
             </div>
 
@@ -783,7 +861,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=9"></script>
 
 </body>
 
