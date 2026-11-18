@@ -1955,3 +1955,62 @@ html.js-enabled #home:not(.hero-ready) .hw {
         animation: none !important;
     }
 }
+
+
+/* =========================================================
+   SHARED WORD ENTRANCE (copied from the Contact section, same timings)
+   Used by every section label and heading marked data-dir:
+   - labels  (data-dir="eyebrow"): every word slides in from the right, one by one
+   - headings (data-dir="title"):  words come from below, above, out of nowhere ...
+                                   and the last word flies in from the right (orange words then glow)
+   script.js wraps the words and sets each word's start time (--t).
+========================================================= */
+.dw {
+    display: inline-block;
+}
+
+html.js-enabled [data-dir]:not(.anim-in) .dw {
+    opacity: 0;
+}
+
+[data-dir].anim-in .dw.from-right {
+    animation: contactFromRight 1.575s cubic-bezier(0.2, 0.8, 0.2, 1) var(--t, 0s) backwards;
+}
+
+[data-dir="eyebrow"].anim-in .dw.from-right {
+    animation-duration: 1.5s;
+}
+
+[data-dir].anim-in .dw.from-below {
+    animation: contactFromBelow 1.35s cubic-bezier(0.2, 0.8, 0.2, 1) var(--t, 0s) backwards;
+}
+
+[data-dir].anim-in .dw.from-above {
+    animation: contactFromAbove 1.35s cubic-bezier(0.2, 0.8, 0.2, 1) var(--t, 0s) backwards;
+}
+
+[data-dir].anim-in .dw.from-nowhere {
+    animation: contactFromNowhere 1.5s ease-out var(--t, 0s) backwards;
+}
+
+[data-dir].anim-in .dw.from-right.dw-glow {
+    animation:
+        contactFromRight 1.575s cubic-bezier(0.2, 0.8, 0.2, 1) var(--t, 0s) backwards,
+        ideasGlow 2.1s ease-out var(--tg, 0s) 1;
+}
+
+/* the Projects title keeps its bend; its words now use the shared entrance */
+html.js-enabled .proj-title:not(.anim-in) {
+    opacity: 1;
+}
+
+.proj-title.anim-in {
+    animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.js-enabled [data-dir] .dw {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+}
