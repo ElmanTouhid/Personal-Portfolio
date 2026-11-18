@@ -1,6 +1,10 @@
 (function () {
     "use strict";
 
+    // Animation speed for every section: 1 = original, 1.5 = 50% slower.
+    // (The CSS animation timings in style.css are already scaled by the same amount.)
+    var SLOW = 1.5;
+
     var root = document.documentElement;
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -63,7 +67,7 @@
             var i = 0;
             line.querySelectorAll("[data-scramble]").forEach(function (el) {
                 buildChars(el).forEach(function (c) {
-                    c.at = 280 + li * 130 + i++ * 50;
+                    c.at = (280 + li * 130 + i++ * 50) * SLOW;
                     all.push(c);
                 });
             });
@@ -263,7 +267,7 @@
             }).sort(function (a, b) {
                 return (a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
             }).forEach(function (e, i) {
-                e.target.style.setProperty("--reveal-delay", Math.min(i, 5) * 90 + "ms");
+                e.target.style.setProperty("--reveal-delay", Math.round(Math.min(i, 5) * 90 * SLOW) + "ms");
                 e.target.classList.add("is-visible");
                 if (!REPLAY) obs.unobserve(e.target);
             });
@@ -380,7 +384,7 @@
             var kind = el.getAttribute("data-about-anim");
             if (kind === "eyebrow") {
                 el.querySelectorAll(".el").forEach(function (l) {
-                    l.style.setProperty("--ed", Math.round(rand(0, 480)) + "ms");
+                    l.style.setProperty("--ed", Math.round(rand(0, 480) * SLOW) + "ms");
                 });
             } else if (kind === "scatter") {
                 el.querySelectorAll(".sw").forEach(function (w) {
@@ -388,7 +392,7 @@
                     w.style.setProperty("--sx", Math.round(Math.cos(ang) * dist) + "px");
                     w.style.setProperty("--sy", Math.round(Math.sin(ang) * dist * 0.6) + "px");
                     w.style.setProperty("--sr", Math.round(rand(-40, 40)) + "deg");
-                    w.style.setProperty("--sd", Math.round(rand(0, 220)) + "ms");
+                    w.style.setProperty("--sd", Math.round(rand(0, 220) * SLOW) + "ms");
                 });
             } else if (kind === "deck") {
                 var dc = el.querySelectorAll(".deck-card");
@@ -1131,7 +1135,7 @@
             spinIn = function () {
                 if (reduceMotion) return;
                 pos = target - 2.5;
-                ease = 0.055;
+                ease = 0.055 / SLOW;
                 kickRing();
             };
         }
