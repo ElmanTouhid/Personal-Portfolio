@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -330,13 +330,16 @@
 
         <div class="max-w-7xl mx-auto">
 
-            <p data-reveal class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+            <!-- Eyebrow: letters fly in from the left, last letter first (split by script.js) -->
+            <p data-skills-anim="eyebrow" class="skills-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
                 What I'm Exploring
             </p>
 
-            <h2 data-reveal class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-                Interests &
-                <span class="text-orange-500">Knowledge.</span>
+            <!-- Title: "Interests" from the left, "Knowledge." from the right, "&" blinks out and back -->
+            <h2 data-skills-anim="title" class="skills-title text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+                <span class="st-left">Interests</span>
+                <span class="st-amp">&amp;</span>
+                <span class="st-right text-orange-500">Knowledge.</span>
             </h2>
 
             <p data-reveal class="text-gray-400 text-lg max-w-2xl mb-16 leading-relaxed">
@@ -344,8 +347,11 @@
                 I'm learning, practicing, and exploring.
             </p>
 
-            <!-- SKILLS GRID -->
-            <div data-reveal-group class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- SKILLS ROW: Netflix-style sideways row (mouse wheel / drag on desktop, swipe on phones) -->
+            <div class="skills-row">
+
+            <div id="skills-track" data-skills-anim="row" class="skills-track" tabindex="0"
+                role="region" aria-label="Skills. Scroll sideways to see all six cards.">
 
                 <!-- PROGRAMMING -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition duration-300">
@@ -472,6 +478,14 @@
                     </div>
 
                 </div>
+
+            </div>
+
+            <!-- Row progress -->
+            <div class="skills-meta" aria-hidden="true">
+                <span class="skills-progress"><span class="skills-progress-fill"></span></span>
+                <span class="skills-hint">Scroll or drag to see more</span>
+            </div>
 
             </div>
 
@@ -762,7 +776,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=7"></script>
 
 </body>
 
