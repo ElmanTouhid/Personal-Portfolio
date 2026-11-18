@@ -631,3 +631,406 @@ html.js-enabled #home.hero-ready .intro-card[data-hero] {
         display: none !important;
     }
 }
+
+/* =========================================================
+   ABOUT SECTION
+   Eyebrow materialises -> title words fly in from the right and close up
+   -> subheading words gather from scattered positions -> glass card -> card stack.
+   Every step replays when the section scrolls back into view (script.js adds/removes .anim-in).
+========================================================= */
+#about {
+    overflow-x: clip;                 /* words and flying cards start off-screen */
+}
+
+/* ---------- "Get To Know Me": appears out of nowhere ---------- */
+.about-eyebrow .about-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.about-eyebrow .el {
+    display: inline-block;
+}
+
+html.js-enabled .about-eyebrow:not(.anim-in) .el {
+    opacity: 0;
+}
+
+.about-eyebrow.anim-in .el {
+    animation: aboutMaterialize 0.95s ease-out both;
+    animation-delay: var(--ed, 0ms);
+}
+
+@keyframes aboutMaterialize {
+    0%   { opacity: 0;    filter: blur(10px); transform: scale(1.9) translateY(-6px); }
+    30%  { opacity: 0.8;  filter: blur(3px); }
+    42%  { opacity: 0.1; }
+    58%  { opacity: 1;    filter: blur(0);    transform: scale(1);   text-shadow: 0 0 18px rgba(249,115,22,0.95), 0 0 36px rgba(249,115,22,0.5); }
+    100% { opacity: 1;    filter: blur(0);    transform: none;       text-shadow: 0 0 0 rgba(249,115,22,0); }
+}
+
+/* ---------- "A Little About Me.": word by word from the right, then converge ---------- */
+.about-title .aw {
+    display: inline-block;
+    --spread: calc(var(--i, 0) * 0.5em);      /* gap each word holds before closing up */
+}
+
+html.js-enabled .about-title:not(.anim-in) .aw {
+    opacity: 0;
+}
+
+.about-title.anim-in .aw {
+    animation:
+        aboutWordIn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+        aboutConverge 0.6s cubic-bezier(0.65, 0, 0.25, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 190ms + 150ms), 1.5s;
+}
+
+.about-title.anim-in .aw-me {
+    animation:
+        aboutWordIn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+        aboutConverge 0.6s cubic-bezier(0.65, 0, 0.25, 1) forwards,
+        ideasGlow 1.4s ease-out 1;
+    animation-delay: calc(var(--i, 0) * 190ms + 150ms), 1.5s, 2s;
+}
+
+@keyframes aboutWordIn {
+    from { opacity: 0; transform: translateX(70vw);          filter: blur(6px); }
+    to   { opacity: 1; transform: translateX(var(--spread)); filter: blur(0); }
+}
+
+@keyframes aboutConverge {
+    from { transform: translateX(var(--spread)); }
+    to   { transform: translateX(0); }
+}
+
+/* ---------- Subheading: scattered words gather into one sentence ---------- */
+.about-scatter .sw {
+    display: inline-block;
+}
+
+html.js-enabled .about-scatter:not(.anim-in) .sw {
+    opacity: 0;
+}
+
+.about-scatter.anim-in .sw {
+    animation: aboutGather 1.35s cubic-bezier(0.16, 0.84, 0.24, 1) both;
+    animation-delay: calc(650ms + var(--sd, 0ms));
+}
+
+@keyframes aboutGather {
+    0%   { opacity: 0; filter: blur(5px); transform: translate(var(--sx, 0), var(--sy, 0)) rotate(var(--sr, 0deg)) scale(0.7); }
+    28%  { opacity: 1; filter: blur(0);   transform: translate(var(--sx, 0), var(--sy, 0)) rotate(var(--sr, 0deg)) scale(0.92); }
+    100% { opacity: 1; filter: blur(0);   transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+
+/* ---------- Intro: liquid glass card ---------- */
+.about-glass-wrap {
+    position: relative;
+}
+
+.about-glass-blob {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    right: -30px;
+    top: -50px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(249,115,22,0.26), rgba(249,115,22,0.06) 50%, transparent 70%);
+    filter: blur(30px);
+    pointer-events: none;
+    animation: aboutBlob 10s ease-in-out infinite;
+}
+
+@keyframes aboutBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(-70px, 40px) scale(1.15); }
+}
+
+.about-glass {
+    position: relative;
+    overflow: hidden;
+    padding: 26px 30px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02) 60%, rgba(249,115,22,0.05));
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.24),      /* bright top edge */
+        inset 0 -1px 0 rgba(255,255,255,0.05),
+        inset 0 0 32px rgba(255,255,255,0.03),
+        0 20px 50px rgba(0,0,0,0.42);
+    transition: transform 0.4s var(--ease-out), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* glossy reflection, same language as the nav */
+.about-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(115deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 72%, rgba(249,115,22,0.08) 100%);
+}
+
+/* light that follows the cursor (desktop) */
+.about-glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(260px circle at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,0.12), transparent 60%);
+    transition: opacity 0.35s ease;
+}
+
+.about-glass:hover {
+    transform: translateY(-3px);
+    border-color: rgba(249, 115, 22, 0.35);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        inset 0 -1px 0 rgba(255,255,255,0.06),
+        0 24px 60px rgba(0,0,0,0.5),
+        0 0 34px rgba(249,115,22,0.12);
+}
+
+.about-glass:hover::after {
+    opacity: 1;
+}
+
+/* slow light streak sliding across the glass */
+.about-glass-sheen {
+    position: absolute;
+    top: -20%;
+    bottom: -20%;
+    left: -60%;
+    width: 35%;
+    transform: skewX(-20deg);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.13), transparent);
+    pointer-events: none;
+    animation: aboutSheen 7s ease-in-out infinite;
+}
+
+@keyframes aboutSheen {
+    0%, 70% { left: -60%; }
+    100%    { left: 130%; }
+}
+
+html.js-enabled .about-glass-wrap:not(.anim-in) {
+    opacity: 0;
+}
+
+.about-glass-wrap.anim-in {
+    animation: aboutGlassIn 1s var(--ease-out) 1.1s backwards;
+}
+
+@keyframes aboutGlassIn {
+    from { opacity: 0; transform: translateY(26px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Card stack ---------- */
+.deck-controls {
+    display: none;
+}
+
+html.js-enabled .about-deck {
+    --peek: 18px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    position: relative;
+    max-width: 470px;
+    margin: 0 auto;
+    padding: 0 calc(var(--peek) * 3) calc(var(--peek) * 2) 0;
+    touch-action: pan-y;              /* vertical scroll still works on phones */
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+    border-radius: 20px;
+}
+
+html.js-enabled .about-deck .deck-card {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 290px;
+    padding: 2.25rem;
+    background-color: #161616;        /* solid, so cards underneath don't show through */
+    box-shadow: 0 22px 50px rgba(0,0,0,0.5);
+    transform:
+        translate(calc(var(--pos, 0) * var(--peek) + var(--dx, 0px)), calc(var(--pos, 0) * var(--peek) * 0.7))
+        rotate(var(--rot, 0deg))
+        scale(calc(1 - var(--pos, 0) * 0.05));
+    filter: brightness(calc(1 - var(--pos, 0) * 0.2));
+    transition: transform 0.5s var(--ease-out), filter 0.5s ease, opacity 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+html.js-enabled .about-deck .deck-card > span:first-child {
+    font-size: 2.75rem;
+    line-height: 1;
+}
+
+html.js-enabled .about-deck .deck-card h4 {
+    font-size: 1.6rem;
+    margin-top: 1.75rem;
+}
+
+html.js-enabled .about-deck .deck-card p {
+    font-size: 1rem;
+}
+
+html.js-enabled .about-deck .deck-card.is-top {
+    box-shadow: 0 22px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(249,115,22,0.18), 0 0 40px rgba(249,115,22,0.07);
+}
+
+html.js-enabled .about-deck.is-dragging,
+html.js-enabled .about-deck.is-dragging .deck-card {
+    cursor: grabbing;
+}
+
+html.js-enabled .about-deck.is-dragging .deck-card,
+html.js-enabled .about-deck .deck-card.no-anim {
+    transition: none;
+}
+
+html.js-enabled .about-deck .deck-card.deck-fly {
+    opacity: 0;
+}
+
+/* cards deal in from the right when the section appears */
+html.js-enabled .about-deck-wrap:not(.anim-in) .deck-card {
+    opacity: 0;
+}
+
+.about-deck-wrap.anim-in .deck-card {
+    animation: aboutDeal 0.8s var(--ease-out) backwards;
+    animation-delay: calc(var(--deal, 0) * 130ms + 300ms);
+}
+
+@keyframes aboutDeal {
+    0%   { opacity: 0; transform: translate(160px, 50px) rotate(10deg) scale(0.9); }
+    18%  { opacity: 1; }
+}
+
+/* controls under the stack */
+html.js-enabled .deck-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    max-width: 470px;
+    margin: 22px auto 0;
+}
+
+html.js-enabled .about-deck-wrap:not(.anim-in) .deck-controls {
+    opacity: 0;
+}
+
+.about-deck-wrap.anim-in .deck-controls {
+    animation: heroUp 0.6s var(--ease-out) 0.9s backwards;
+}
+
+.deck-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    color: #d1d5db;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, transform 0.25s var(--ease-out);
+}
+
+.deck-btn:hover {
+    color: #ffffff;
+    border-color: rgba(249,115,22,0.8);
+    background: rgba(249,115,22,0.12);
+    transform: translateY(-2px);
+}
+
+.deck-count {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+}
+
+.deck-current {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.deck-hint {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: #6b7280;
+    transition: opacity 0.4s ease;
+}
+
+.deck-hint::before {
+    content: "←";
+    display: inline-block;
+    margin-right: 6px;
+    color: var(--accent);
+    animation: aboutNudge 1.6s ease-in-out infinite;
+}
+
+.deck-hint.is-used {
+    opacity: 0;
+}
+
+@keyframes aboutNudge {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(-5px); }
+}
+
+@media (max-width: 639px) {
+    html.js-enabled .about-deck { --peek: 12px; }
+    html.js-enabled .about-deck .deck-card { padding: 1.75rem; min-height: 270px; }
+    .deck-hint { margin-left: 0; width: 100%; }
+}
+
+/* ---------- Reduced motion: everything visible, nothing flies ---------- */
+@media (prefers-reduced-motion: reduce) {
+    html.js-enabled .about-eyebrow .el,
+    html.js-enabled .about-title .aw,
+    html.js-enabled .about-scatter .sw,
+    html.js-enabled .about-glass-wrap,
+    html.js-enabled .about-deck-wrap .deck-card,
+    html.js-enabled .deck-controls {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+
+    .about-glass-blob,
+    .about-glass-sheen,
+    .deck-hint::before {
+        animation: none !important;
+    }
+
+    html.js-enabled .about-deck .deck-card {
+        transition: opacity 0.2s ease !important;
+    }
+
+    .about-glass,
+    .deck-btn {
+        transition: none !important;
+    }
+
+    .about-glass:hover,
+    .deck-btn:hover {
+        transform: none;
+    }
+}
