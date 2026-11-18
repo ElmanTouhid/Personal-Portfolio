@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=12">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -533,6 +533,11 @@
             <!-- PROJECTS: 3D ring (mouse wheel / drag / swipe / arrow keys). Plain 2-column grid without JS. -->
             <div data-proj-anim="ring" class="proj-carousel">
 
+                <!-- Background lettering under the ring: very dim outline, drifts a little as the ring turns -->
+                <div class="proj-bgword" aria-hidden="true">
+                    <span class="bw-word">Built</span> <span class="bw-word">from</span> <span class="bw-word bw-ideas">ideas</span>
+                </div>
+
                 <div id="proj-stage" class="proj-stage" tabindex="0" role="region" aria-roledescription="carousel"
                     aria-label="Projects. Drag, swipe, scroll or use the arrow keys to turn the carousel.">
 
@@ -861,7 +866,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=9"></script>
+    <script src="script.js?v=10"></script>
 
 </body>
 
