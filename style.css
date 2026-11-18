@@ -1327,3 +1327,95 @@ html.js-enabled .skills-track:not(.anim-in) > div {
         animation: none !important;
     }
 }
+
+
+/* =========================================================
+   SKILLS: soft aurora background
+   Three blurred glows drift slowly on their own; on desktop they also lean toward the cursor.
+   Kept dim so they melt into the black.
+========================================================= */
+.skills-aurora {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.85;
+    transition: opacity 0.8s ease;
+    --fx: 0px;
+    --fy: 0px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
+}
+
+#skills.aurora-active .skills-aurora {
+    opacity: 1;
+}
+
+.sa {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    will-change: transform;
+}
+
+.sa-1 {
+    width: 560px;
+    height: 460px;
+    left: 4%;
+    top: 26%;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.04) 55%, transparent 72%);
+    translate: var(--fx) var(--fy);
+    animation: auroraDrift1 24s ease-in-out infinite alternate;
+}
+
+.sa-2 {
+    width: 480px;
+    height: 420px;
+    right: 2%;
+    top: 8%;
+    background: radial-gradient(circle, rgba(194, 65, 12, 0.13), rgba(194, 65, 12, 0.03) 55%, transparent 72%);
+    translate: calc(var(--fx) * 0.6) calc(var(--fy) * 0.6);
+    animation: auroraDrift2 28s ease-in-out infinite alternate;
+}
+
+.sa-3 {
+    width: 640px;
+    height: 380px;
+    left: 34%;
+    bottom: 4%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012) 55%, transparent 72%);
+    translate: calc(var(--fx) * 0.35) calc(var(--fy) * 0.35);
+    animation: auroraDrift3 32s ease-in-out infinite alternate;
+}
+
+@keyframes auroraDrift1 {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(140px, -60px) scale(1.12); }
+    100% { transform: translate(60px, 80px) scale(0.95); }
+}
+
+@keyframes auroraDrift2 {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(-160px, 90px) scale(0.9); }
+    100% { transform: translate(-60px, 180px) scale(1.1); }
+}
+
+@keyframes auroraDrift3 {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(-120px, -70px) scale(1.15); }
+    100% { transform: translate(110px, -30px) scale(1); }
+}
+
+@media (max-width: 767px) {
+    .sa-1 { width: 340px; height: 300px; }
+    .sa-2 { width: 300px; height: 280px; }
+    .sa-3 { width: 380px; height: 260px; left: 10%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sa {
+        animation: none !important;
+        translate: none !important;
+    }
+}
