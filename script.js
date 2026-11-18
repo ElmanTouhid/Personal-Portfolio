@@ -1098,6 +1098,58 @@
     })();
 
     // =========================================
+    // SHARED WORD ENTRANCE (same animation as the Contact section)
+    // Every element with data-dir gets its words wrapped and timed here;
+    // the section's own observer adds .anim-in, which starts the CSS animations.
+    // =========================================
+    (function () {
+        var dirEls = document.querySelectorAll("[data-dir]");
+        dirEls.forEach(function (el) {
+            var kind = el.getAttribute("data-dir");
+            var sel = el.getAttribute("data-dir-words");
+            var words;
+
+            if (sel) {
+                words = Array.prototype.slice.call(el.querySelectorAll(sel));   // already split (e.g. the bent Projects title)
+            } else {
+                var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+                var nodes = [];
+                while (walker.nextNode()) nodes.push(walker.currentNode);
+                nodes.forEach(function (tn) {
+                    var frag = document.createDocumentFragment();
+                    tn.textContent.split(/(\s+)/).forEach(function (part) {
+                        if (!part) return;
+                        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+                        var w = document.createElement("span");
+                        w.className = "dw";
+                        w.textContent = part;
+                        frag.appendChild(w);
+                    });
+                    tn.parentNode.replaceChild(frag, tn);
+                });
+                words = Array.prototype.slice.call(el.querySelectorAll(".dw"));
+            }
+
+            // Contact timings: label words 0.675s apart from 0.15s; heading words ~0.4s apart from 1.35s
+            var base = parseFloat(el.getAttribute("data-dir-base"));
+            if (isNaN(base)) base = kind === "eyebrow" ? 0.15 : 1.35;
+            var step = kind === "eyebrow" ? 0.675 : 0.4;
+            var cycle = ["below", "above", "nowhere"];
+
+            words.forEach(function (w, i) {
+                var dir = kind === "eyebrow" ? "right" : (i === words.length - 1 ? "right" : cycle[i % 3]);
+                var t = base + i * step;
+                w.classList.add("dw", "from-" + dir);
+                w.style.setProperty("--t", t.toFixed(3) + "s");
+                if (kind !== "eyebrow" && dir === "right" && w.closest(".text-orange-500")) {
+                    w.classList.add("dw-glow");
+                    w.style.setProperty("--tg", (t + 1.5).toFixed(3) + "s");
+                }
+            });
+        });
+    })();
+
+    // =========================================
     // MOBILE NAVIGATION
     // =========================================
     var menuBtn = document.getElementById("menu-btn");
