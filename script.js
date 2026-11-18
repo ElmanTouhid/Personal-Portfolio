@@ -427,6 +427,153 @@
             });
         }
 
+        // ----- Binary background: magnetic digits, hold + swipe to flip -----
+        var bits = document.getElementById("about-bits");
+        var bctx = bits && bits.getContext("2d");
+        if (bits && bctx) {
+            var interactive = finePointer && !reduceMotion;
+            var CELL = 32;                 // grid spacing (px)
+            var MAG_R = 130;               // magnetic radius
+            var MAG_PULL = 12;             // max pull toward the cursor (px)
+            var FLIP_R = 20;               // swipe radius that flips a digit
+            var BASE_A = 0.055;            // resting opacity: melts into the black
+            var NEAR_A = 0.08;             // extra opacity right next to the cursor
+            var FONT = "600 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+            var bw = 0, bh = 0, digits = [], bRaf = 0, bVisible = false;
+            var cx = -9999, cy = -9999, lx = -9999, ly = -9999, inside = false;
+            var swiping = false, stroke = 0;
+
+            var buildBits = function () {
+                var r = about.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
+                if (Math.round(r.width) === bw && Math.abs(r.height - bh) < 40 && digits.length) {
+                    bh = r.height;
+                    bits.height = bh * d;
+                    bctx.setTransform(d, 0, 0, d, 0, 0);
+                    return;
+                }
+                bw = Math.round(r.width); bh = r.height;
+                bits.width = bw * d; bits.height = bh * d;
+                bctx.setTransform(d, 0, 0, d, 0, 0);
+                digits = [];
+                for (var y = CELL / 2; y < bh; y += CELL) {
+                    for (var x = CELL / 2; x < bw; x += CELL) {
+                        digits.push({
+                            hx: x + rand(-5, 5), hy: y + rand(-5, 5),
+                            ox: 0, oy: 0,
+                            v: Math.random() < 0.5 ? 0 : 1,
+                            glow: 0, flash: 0, stroke: -1
+                        });
+                    }
+                }
+            };
+
+            // distance from a digit to the swipe segment since the last move (catches fast swipes)
+            var segDist = function (px, py, ax, ay, bx2, by2) {
+                var vx = bx2 - ax, vy = by2 - ay, len = vx * vx + vy * vy;
+                var t = len ? Math.max(0, Math.min(1, ((px - ax) * vx + (py - ay) * vy) / len)) : 0;
+                var qx = ax + t * vx - px, qy = ay + t * vy - py;
+                return Math.sqrt(qx * qx + qy * qy);
+            };
+
+            var drawBits = function () {
+                bRaf = 0;
+                bctx.clearRect(0, 0, bw, bh);
+                bctx.font = FONT;
+                bctx.textAlign = "center";
+                bctx.textBaseline = "middle";
+                var busyAgain = false;
+
+                for (var i = 0; i < digits.length; i++) {
+                    var g = digits[i];
+                    var tx = 0, ty = 0, near = 0;
+
+                    if (interactive && inside) {
+                        var dx = cx - g.hx, dy = cy - g.hy, dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < MAG_R && dist > 0.01) {
+                            near = 1 - dist / MAG_R;
+                            var pull = near * near * MAG_PULL;
+                            tx = dx / dist * pull;
+                            ty = dy / dist * pull;
+                        }
+                        if (swiping && g.stroke !== stroke && segDist(g.hx + g.ox, g.hy + g.oy, lx, ly, cx, cy) < FLIP_R) {
+                            g.v = 1 - g.v;          // stays flipped until swiped again
+                            g.stroke = stroke;
+                            g.flash = 1;
+                        }
+                    }
+
+                    g.ox += (tx - g.ox) * 0.14;
+                    g.oy += (ty - g.oy) * 0.14;
+                    g.glow += (near - g.glow) * 0.15;
+                    if (g.flash > 0.01) g.flash *= 0.93; else g.flash = 0;
+
+                    if (Math.abs(tx - g.ox) > 0.05 || Math.abs(ty - g.oy) > 0.05 || Math.abs(near - g.glow) > 0.01 || g.flash) busyAgain = true;
+
+                    var a = BASE_A + g.glow * NEAR_A + g.flash * 0.12;
+                    if (g.flash) {
+                        // faint warm tint that fades back to grey
+                        var f = g.flash;
+                        bctx.fillStyle = "rgba(" + Math.round(255 - f * 25) + "," + Math.round(255 - f * 95) + "," + Math.round(255 - f * 150) + "," + a.toFixed(3) + ")";
+                    } else {
+                        bctx.fillStyle = "rgba(255,255,255," + a.toFixed(3) + ")";
+                    }
+                    bctx.fillText(g.v ? "1" : "0", g.hx + g.ox, g.hy + g.oy);
+                }
+
+                lx = cx; ly = cy;
+                if (interactive && bVisible && !document.hidden && (inside || busyAgain)) bRaf = requestAnimationFrame(drawBits);
+            };
+
+            var wakeBits = function () { if (!bRaf) bRaf = requestAnimationFrame(drawBits); };
+
+            buildBits();
+            drawBits();
+            if ("ResizeObserver" in window) new ResizeObserver(function () { buildBits(); wakeBits(); }).observe(about);
+            if (hasIO) {
+                new IntersectionObserver(function (en) { bVisible = en[0].isIntersecting; if (bVisible) wakeBits(); }).observe(about);
+            } else {
+                bVisible = true;
+            }
+
+            if (interactive) {
+                var toLocal = function (e) {
+                    var r = bits.getBoundingClientRect();
+                    cx = e.clientX - r.left;
+                    cy = e.clientY - r.top;
+                };
+
+                about.addEventListener("pointermove", function (e) {
+                    if (e.pointerType !== "mouse") return;
+                    if (!inside) { toLocal(e); lx = cx; ly = cy; }
+                    inside = true;
+                    toLocal(e);
+                    wakeBits();
+                });
+                about.addEventListener("pointerleave", function () {
+                    inside = false;
+                    cx = cy = lx = ly = -9999;
+                    wakeBits();
+                });
+
+                // Hold the left button anywhere in the background (not on the cards, buttons or links) and swipe
+                about.addEventListener("mousedown", function (e) {
+                    if (e.button !== 0 || e.target.closest(".about-deck-wrap, a, button, input, textarea")) return;
+                    e.preventDefault();                       // no text selection while swiping
+                    swiping = true;
+                    stroke++;
+                    toLocal(e); lx = cx; ly = cy;
+                    inside = true;
+                    about.classList.add("is-swiping");
+                    wakeBits();
+                });
+                window.addEventListener("mouseup", function () {
+                    if (!swiping) return;
+                    swiping = false;
+                    about.classList.remove("is-swiping");
+                });
+            }
+        }
+
         // ----- Card stack -----
         var deck = document.getElementById("about-deck");
         if (deck) {
