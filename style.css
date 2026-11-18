@@ -1659,90 +1659,116 @@ html.js-enabled .proj-stage.measuring .proj-slot > div {
 
 
 /* =========================================================
-   PROJECTS: "Built from ideas" background lettering
-   Outline only, very low contrast; "ideas" carries a faint warm tint.
+   PROJECTS: giant "Built from ideas" background
+   Three huge outline lines filling the section behind everything.
+   Mostly still: a slow breathing glow, a light that sweeps across now and then,
+   and a small drift when the project ring turns.
 ========================================================= */
 .proj-bgword {
-    display: none;
-}
-
-html.js-enabled .proj-bgword {
-    display: block;
     position: absolute;
-    left: 50%;
-    bottom: -0.12em;
+    inset: 0;
     z-index: 0;
-    width: max-content;
-    max-width: 96vw;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    overflow: hidden;
     pointer-events: none;
-    font-size: clamp(3.2rem, 9vw, 9.5rem);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 90%, transparent 100%);
+}
+
+.bw-line {
+    display: block;
+    font-size: clamp(7rem, 24vw, 24rem);
     font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+    line-height: 0.82;
+    letter-spacing: -0.04em;
     white-space: nowrap;
-    color: rgba(255, 255, 255, 0.012);
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.075);
-    transform: translateX(calc(-50% + var(--drift, 0px)));
+    color: rgba(255, 255, 255, 0.010);
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.055);
+    transform: translateX(calc(var(--drift, 0px) * var(--depth, 1)));
+    animation: bwBreathe 9s ease-in-out infinite;
 }
 
-html.js-enabled .proj-carousel {
-    position: relative;
-    padding-bottom: clamp(3rem, 7vw, 7rem);   /* room for the lettering under the ring */
+.bw-line:nth-child(1) { --depth: 1;    margin-right: 18vw; }
+.bw-line:nth-child(2) { --depth: -0.6; margin-left: 22vw; animation-delay: -3s; }
+.bw-line:nth-child(3) { --depth: 0.8;  margin-right: 6vw;  animation-delay: -6s; }
+
+.bw-ideas {
+    color: rgba(249, 115, 22, 0.018);
+    -webkit-text-stroke: 1.5px rgba(249, 115, 22, 0.11);
+    animation-name: bwBreatheWarm;
 }
 
-html.js-enabled .proj-stage,
-html.js-enabled .proj-controls,
-html.js-enabled .proj-hint {
-    position: relative;
-    z-index: 1;
+/* slow breathing: the outline brightens a touch and fades back */
+@keyframes bwBreathe {
+    0%, 100% { -webkit-text-stroke-color: rgba(255, 255, 255, 0.045); }
+    50%      { -webkit-text-stroke-color: rgba(255, 255, 255, 0.075); }
 }
 
-.proj-bgword .bw-word {
-    display: inline-block;
+@keyframes bwBreatheWarm {
+    0%, 100% { -webkit-text-stroke-color: rgba(249, 115, 22, 0.09); }
+    50%      { -webkit-text-stroke-color: rgba(249, 115, 22, 0.15); }
 }
 
-.proj-bgword .bw-ideas {
-    color: rgba(249, 115, 22, 0.025);
-    -webkit-text-stroke: 1px rgba(249, 115, 22, 0.16);
+/* faint light that sweeps across the lettering every so often */
+.proj-bgword::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -40%;
+    width: 30%;
+    transform: skewX(-18deg);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.025), transparent);
+    animation: bwSweep 12s ease-in-out infinite;
 }
 
-html.js-enabled .proj-ring {
-    z-index: 1;
+@keyframes bwSweep {
+    0%, 65% { left: -40%; }
+    100%    { left: 130%; }
 }
 
-/* slow, soft entrance: each word fades up out of a blur, spacing settles */
-html.js-enabled .proj-carousel:not(.anim-in) .bw-word {
+/* entrance: lines fade up out of a soft blur, one after another */
+html.js-enabled .proj-bgword:not(.anim-in) .bw-line {
     opacity: 0;
 }
 
-.proj-carousel.anim-in .bw-word {
-    animation: bgWordIn 2.2s ease-out both;
+.proj-bgword.anim-in .bw-line {
+    animation:
+        bwIn 2.4s ease-out both,
+        bwBreathe 9s ease-in-out infinite;
 }
 
-.proj-carousel.anim-in .bw-word:nth-child(2) { animation-delay: 0.25s; }
-.proj-carousel.anim-in .bw-word:nth-child(3) { animation-delay: 0.5s; }
+.proj-bgword.anim-in .bw-ideas {
+    animation:
+        bwIn 2.4s ease-out both,
+        bwBreatheWarm 9s ease-in-out infinite;
+}
 
-@keyframes bgWordIn {
-    from { opacity: 0; filter: blur(10px); letter-spacing: 0.12em; transform: translateY(14px); }
-    to   { opacity: 1; filter: blur(0);    letter-spacing: -0.02em; transform: none; }
+.proj-bgword.anim-in .bw-line:nth-child(2) { animation-delay: 0.3s, -3s; }
+.proj-bgword.anim-in .bw-line:nth-child(3) { animation-delay: 0.6s, -6s; }
+
+@keyframes bwIn {
+    from { opacity: 0; filter: blur(14px); }
+    to   { opacity: 1; filter: blur(0); }
 }
 
 @media (max-width: 767px) {
-    html.js-enabled .proj-bgword {
-        white-space: normal;
-        width: 92vw;
-        font-size: clamp(2.6rem, 15vw, 4.5rem);
-    }
+    .bw-line { font-size: clamp(5rem, 30vw, 10rem); }
+    .bw-line:nth-child(1) { margin-right: 10vw; }
+    .bw-line:nth-child(2) { margin-left: 14vw; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    html.js-enabled .proj-carousel .bw-word {
-        opacity: 1 !important;
+    .bw-line,
+    .proj-bgword.anim-in .bw-line,
+    .proj-bgword::after {
         animation: none !important;
-    }
-
-    html.js-enabled .proj-bgword {
-        transform: translateX(-50%);
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
