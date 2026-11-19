@@ -278,6 +278,78 @@
         var scatter = about.querySelector(".about-scatter");
         if (scatter) splitWords(scatter, "sw");
 
+        // ----- Subheading spark trail: a small spark runs under the line and lights each word -----
+        var sparkRun = 0;
+        var runSpark = function (el) {
+            var words = Array.prototype.slice.call(el.querySelectorAll(".sw"));
+            if (!words.length) return;
+            var spark = el.querySelector(".about-spark");
+            if (!spark) {
+                spark = document.createElement("span");
+                spark.className = "about-spark";
+                spark.setAttribute("aria-hidden", "true");
+                el.appendChild(spark);
+            }
+            var run = ++sparkRun;
+            words.forEach(function (w) { w.classList.remove("lit"); });
+            spark.classList.remove("is-on", "is-done");
+
+            // one segment per word: from its left edge to its right edge, just under the text
+            var segs = words.map(function (w) {
+                return {
+                    w: w,
+                    x0: w.offsetLeft,
+                    x1: w.offsetLeft + w.offsetWidth,
+                    y: w.offsetTop + w.offsetHeight * 0.86
+                };
+            });
+            var SPEED = 0.5;                       // px per ms
+            var GAP = 70;                          // short pause in the space between words (ms)
+            var timeline = [], t = 0;
+            segs.forEach(function (sg, i) {
+                var dur = Math.max(120, (sg.x1 - sg.x0) / SPEED);
+                var next = segs[i + 1];
+                var newLine = next && Math.abs(next.y - sg.y) > 4;
+                timeline.push({ sg: sg, start: t, dur: dur });
+                t += dur + (next ? (newLine ? 160 : GAP) : 0);
+            });
+            var total = t;
+
+            var place = function (x, y) {
+                spark.style.left = x.toFixed(1) + "px";
+                spark.style.top = y.toFixed(1) + "px";
+            };
+            place(segs[0].x0, segs[0].y);
+
+            var t0 = 0;
+            var tick = function (now) {
+                if (run !== sparkRun) return;
+                if (!t0) { t0 = now; spark.classList.add("is-on"); }
+                var el2 = now - t0;
+                for (var i = 0; i < timeline.length; i++) {
+                    var it = timeline[i];
+                    if (el2 >= it.start && !it.sg.w.classList.contains("lit")) it.sg.w.classList.add("lit");
+                    if (el2 >= it.start && el2 <= it.start + it.dur) {
+                        var k = (el2 - it.start) / it.dur;
+                        k = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;   // ease in-out
+                        place(it.sg.x0 + (it.sg.x1 - it.sg.x0) * k, it.sg.y);
+                        break;
+                    }
+                    var nxt = timeline[i + 1];
+                    if (nxt && el2 > it.start + it.dur && el2 < nxt.start) {
+                        place(it.sg.x1, it.sg.y);       // resting in the gap (or about to hop to the next line)
+                        break;
+                    }
+                }
+                if (el2 < total) { requestAnimationFrame(tick); return; }
+                // settle on the final full stop and pulse once
+                var last = segs[segs.length - 1];
+                place(last.x1 - 4, last.y - 2);
+                spark.classList.add("is-done");
+            };
+            setTimeout(function () { if (run === sparkRun) requestAnimationFrame(tick); }, 550);
+        };
+
         // Fresh random positions each time the section comes into view
         var prepare = function (el) {
             var kind = el.getAttribute("data-about-anim");
@@ -286,13 +358,7 @@
                     l.style.setProperty("--ed", Math.round(rand(0, 480)) + "ms");
                 });
             } else if (kind === "scatter") {
-                el.querySelectorAll(".sw").forEach(function (w) {
-                    var ang = rand(0, Math.PI * 2), dist = rand(140, 280);
-                    w.style.setProperty("--sx", Math.round(Math.cos(ang) * dist) + "px");
-                    w.style.setProperty("--sy", Math.round(Math.sin(ang) * dist * 0.6) + "px");
-                    w.style.setProperty("--sr", Math.round(rand(-40, 40)) + "deg");
-                    w.style.setProperty("--sd", Math.round(rand(0, 220)) + "ms");
-                });
+                runSpark(el);
             } else if (kind === "deck") {
                 var dc = el.querySelectorAll(".deck-card");
                 dc.forEach(function (c) {
