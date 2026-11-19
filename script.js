@@ -1,10 +1,6 @@
 (function () {
     "use strict";
 
-    // Animation speed for every section: 1 = original, 1.5 = 50% slower.
-    // (The CSS animation timings in style.css are already scaled by the same amount.)
-    var SLOW = 1.5;
-
     var root = document.documentElement;
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -170,7 +166,7 @@
             }).sort(function (a, b) {
                 return (a.target.compareDocumentPosition(b.target) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
             }).forEach(function (e, i) {
-                e.target.style.setProperty("--reveal-delay", Math.round(Math.min(i, 5) * 90 * SLOW) + "ms");
+                e.target.style.setProperty("--reveal-delay", Math.min(i, 5) * 90 + "ms");
                 e.target.classList.add("is-visible");
                 if (!REPLAY) obs.unobserve(e.target);
             });
@@ -280,23 +276,22 @@
         }
 
         var scatter = about.querySelector(".about-scatter");
-        if (scatter) {
-            splitWords(scatter, "sw");
-            scatter.querySelectorAll(".sw").forEach(function (w, k) { w.style.setProperty("--k", k); });
-            // the "//" that makes the line look like a code comment at first
-            var slash = document.createElement("span");
-            slash.className = "ac-slash";
-            slash.setAttribute("aria-hidden", "true");
-            slash.textContent = "//\u00a0";
-            scatter.insertBefore(slash, scatter.querySelector(".sw"));
-        }
+        if (scatter) splitWords(scatter, "sw");
 
         // Fresh random positions each time the section comes into view
         var prepare = function (el) {
             var kind = el.getAttribute("data-about-anim");
             if (kind === "eyebrow") {
                 el.querySelectorAll(".el").forEach(function (l) {
-                    l.style.setProperty("--ed", Math.round(rand(0, 480) * SLOW) + "ms");
+                    l.style.setProperty("--ed", Math.round(rand(0, 480)) + "ms");
+                });
+            } else if (kind === "scatter") {
+                el.querySelectorAll(".sw").forEach(function (w) {
+                    var ang = rand(0, Math.PI * 2), dist = rand(140, 280);
+                    w.style.setProperty("--sx", Math.round(Math.cos(ang) * dist) + "px");
+                    w.style.setProperty("--sy", Math.round(Math.sin(ang) * dist * 0.6) + "px");
+                    w.style.setProperty("--sr", Math.round(rand(-40, 40)) + "deg");
+                    w.style.setProperty("--sd", Math.round(rand(0, 220)) + "ms");
                 });
             } else if (kind === "deck") {
                 var dc = el.querySelectorAll(".deck-card");
@@ -1039,7 +1034,7 @@
             spinIn = function () {
                 if (reduceMotion) return;
                 pos = target - 2.5;
-                ease = 0.055 / SLOW;
+                ease = 0.055;
                 kickRing();
             };
         }
@@ -1095,58 +1090,6 @@
                 cGlass.style.setProperty("--gy", (e.clientY - r.top) + "px");
             });
         }
-    })();
-
-    // =========================================
-    // SHARED WORD ENTRANCE (same animation as the Contact section)
-    // Every element with data-dir gets its words wrapped and timed here;
-    // the section's own observer adds .anim-in, which starts the CSS animations.
-    // =========================================
-    (function () {
-        var dirEls = document.querySelectorAll("[data-dir]");
-        dirEls.forEach(function (el) {
-            var kind = el.getAttribute("data-dir");
-            var sel = el.getAttribute("data-dir-words");
-            var words;
-
-            if (sel) {
-                words = Array.prototype.slice.call(el.querySelectorAll(sel));   // already split (e.g. the bent Projects title)
-            } else {
-                var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-                var nodes = [];
-                while (walker.nextNode()) nodes.push(walker.currentNode);
-                nodes.forEach(function (tn) {
-                    var frag = document.createDocumentFragment();
-                    tn.textContent.split(/(\s+)/).forEach(function (part) {
-                        if (!part) return;
-                        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
-                        var w = document.createElement("span");
-                        w.className = "dw";
-                        w.textContent = part;
-                        frag.appendChild(w);
-                    });
-                    tn.parentNode.replaceChild(frag, tn);
-                });
-                words = Array.prototype.slice.call(el.querySelectorAll(".dw"));
-            }
-
-            // Contact timings: label words 0.675s apart from 0.15s; heading words ~0.4s apart from 1.35s
-            var base = parseFloat(el.getAttribute("data-dir-base"));
-            if (isNaN(base)) base = kind === "eyebrow" ? 0.15 : 1.35;
-            var step = kind === "eyebrow" ? 0.675 : 0.4;
-            var cycle = ["below", "above", "nowhere"];
-
-            words.forEach(function (w, i) {
-                var dir = kind === "eyebrow" ? "right" : (i === words.length - 1 ? "right" : cycle[i % 3]);
-                var t = base + i * step;
-                w.classList.add("dw", "from-" + dir);
-                w.style.setProperty("--t", t.toFixed(3) + "s");
-                if (kind !== "eyebrow" && dir === "right" && w.closest(".text-orange-500")) {
-                    w.classList.add("dw-glow");
-                    w.style.setProperty("--tg", (t + 1.5).toFixed(3) + "s");
-                }
-            });
-        });
     })();
 
     // =========================================
