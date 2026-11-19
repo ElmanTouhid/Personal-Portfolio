@@ -1978,3 +1978,25 @@ html.js-enabled #home:not(.hero-ready) .hw {
         animation: none !important;
     }
 }
+
+
+/* =========================================================
+   ABOUT -> SKILLS: one continuous background (like a gradient jersey)
+   - no divider line between the sections (removed in index.html)
+   - the binary digits fade out slowly over the bottom of About
+   - the Skills glows reach up into that fade, so the two backgrounds overlap
+========================================================= */
+.about-bits {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 62%, transparent 100%);
+}
+
+.skills-aurora {
+    top: -220px;                      /* bleed upward under the end of About */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.55) 12%, #000 30%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.55) 12%, #000 30%, #000 82%, transparent 100%);
+}
+
+@media (max-width: 767px) {
+    .skills-aurora { top: -140px; }
+}
