@@ -27,7 +27,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
 </head>
 
 <body class="bg-[#0c0c0c] text-white">
@@ -173,15 +173,17 @@
 
         <div class="relative z-10 max-w-7xl mx-auto">
 
-            <!-- Eyebrow: words slide in slowly from the right, one by one (same animation as Contact) -->
-            <p data-about-anim="dir" data-dir="eyebrow" class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+            <!-- Eyebrow: letters materialise out of nowhere (split by script.js) -->
+            <p data-about-anim="eyebrow" class="about-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
                 Get To Know Me
             </p>
 
-            <!-- Title: each word from its own direction (same animation as Contact) -->
-            <h2 data-about-anim="dir" data-dir="title" class="about-title text-4xl md:text-6xl font-extrabold leading-tight mb-16">
-                A Little About
-                <span class="text-orange-500">Me.</span>
+            <!-- Title: words fly in from the right one at a time, then close up together -->
+            <h2 data-about-anim="title" class="about-title text-4xl md:text-6xl font-extrabold leading-tight mb-16">
+                <span class="aw" style="--i:0">A</span>
+                <span class="aw" style="--i:1">Little</span>
+                <span class="aw" style="--i:2">About</span>
+                <span class="aw aw-me text-orange-500" style="--i:3">Me.</span>
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
@@ -189,8 +191,8 @@
                 <!-- LEFT CONTENT -->
                 <div>
 
-                    <!-- Subheading: each word from its own direction, after the title (same animation as Contact) -->
-                    <h3 data-about-anim="dir" data-dir="title" data-dir-base="2.9" class="text-2xl md:text-3xl font-bold leading-relaxed mb-7">
+                    <!-- Subheading: words start scattered and converge (split by script.js) -->
+                    <h3 data-about-anim="scatter" class="about-scatter text-2xl md:text-3xl font-bold leading-relaxed mb-7">
                         Exploring computer science.
                         <span class="text-orange-500">One problem at a time.</span>
                     </h3>
@@ -327,15 +329,16 @@
 
         <div class="relative z-10 max-w-7xl mx-auto">
 
-            <!-- Eyebrow: words slide in slowly from the right, one by one (same animation as Contact) -->
-            <p data-skills-anim="dir" data-dir="eyebrow" class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+            <!-- Eyebrow: letters fly in from the left, last letter first (split by script.js) -->
+            <p data-skills-anim="eyebrow" class="skills-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
                 What I'm Exploring
             </p>
 
-            <!-- Title: each word from its own direction (same animation as Contact) -->
-            <h2 data-skills-anim="dir" data-dir="title" class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-                Interests &amp;
-                <span class="text-orange-500">Knowledge.</span>
+            <!-- Title: "Interests" from the left, "Knowledge." from the right, "&" blinks out and back -->
+            <h2 data-skills-anim="title" class="skills-title text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+                <span class="st-left">Interests</span>
+                <span class="st-amp">&amp;</span>
+                <span class="st-right text-orange-500">Knowledge.</span>
             </h2>
 
             <p data-reveal class="text-gray-400 text-lg max-w-2xl mb-16 leading-relaxed">
@@ -505,13 +508,13 @@
             <!-- Header (centred) -->
             <div class="proj-head text-center">
 
-                <!-- Eyebrow: words slide in slowly from the right, one by one (same animation as Contact) -->
-                <p data-proj-anim="dir" data-dir="eyebrow" class="text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
-                    Selected Work
+                <!-- "Selected" slides in from the left, "Work" from the right; they meet in the middle -->
+                <p data-proj-anim="eyebrow" class="proj-eyebrow text-orange-500 uppercase tracking-[0.3em] text-sm font-semibold mb-5">
+                    <span class="pe-left">Selected</span> <span class="pe-right">Work</span>
                 </p>
 
                 <!-- Straight line, both ends bent slightly back into the screen (letters split by script.js) -->
-                <h2 data-proj-anim="title" data-dir="title" data-dir-words=".pw" class="proj-title text-4xl md:text-6xl font-extrabold leading-tight mb-8">
+                <h2 data-proj-anim="title" class="proj-title text-4xl md:text-6xl font-extrabold leading-tight mb-8">
                     Projects &amp;
                     <span class="text-orange-500">Experiments.</span>
                 </h2>
@@ -877,7 +880,7 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js?v=15"></script>
+    <script src="script.js?v=16"></script>
 
 </body>
 
