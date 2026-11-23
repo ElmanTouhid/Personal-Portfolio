@@ -4,7 +4,7 @@ A personal portfolio website showcasing my background, interests, technical know
 
 🌐 **Live Website:** [View My Portfolio](https://elmantouhid.me/)
 
-💻 **GitHub Repository:** [Mini Project 2](https://github.com/ElmanTouhid/mini-project-2)
+💻 **GitHub Repository:** (https://github.com/ElmanTouhid/Personal-Portfolio.git)
 
 ---
 
